@@ -1,0 +1,40 @@
+[
+  {
+    "email": "abc12@g.com",
+    "password": "$2b$10$9t6RbvlJQkWmUXV4SZHRLu2TpN2dMKFhiGT5XV70ZB7fmbqcezLrq",
+    "phone": "9891231212",
+    "username": "ankit123",
+    "hobbies": [
+      "Travelling",
+      "Cricket"
+    ],
+    "gender": "Male",
+    "dob": "2024-10-05",
+    "id": "cc463fab-751e-49f6-b45b-fcd347f72aa1"
+  },
+  {
+    "email": "12was@g.com",
+    "password": "$2b$10$IshThwdMU5yOYv0U2LwaneDbcaB6lyDUG37aEdXtUm2B.O1m18cnO",
+    "phone": "0912323212",
+    "username": "Rahul",
+    "hobbies": [
+      "Travelling"
+    ],
+    "gender": "Male",
+    "dob": "2024-10-03",
+    "id": "74399b7d-4c7c-421b-84cb-02027a3b2dff"
+  },
+  {
+    "email": "ankit23@g.com",
+    "password": "$2b$10$KAxCDwMTqAte8Q/wnKvy2etYtpuM5iEFevxhZwMfK4yipRzgQXrtm",
+    "phone": "1111222232",
+    "username": "user321",
+    "hobbies": [
+      "Travelling",
+      "Cricket"
+    ],
+    "gender": "Male",
+    "dob": "2024-10-10",
+    "id": "9bae14e6-514b-4b3e-88e9-fb7ca94df688"
+  }
+]
