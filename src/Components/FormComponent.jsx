@@ -3,8 +3,10 @@ import { useFormik } from 'formik';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const FormComponent = () => {
+    const Navigate = useNavigate()
     const notify = (message, type = 'success') => {
         if (type === 'error') {
             toast.error(message);
@@ -76,10 +78,12 @@ const FormComponent = () => {
             try {
                 const response = await axios.post('http://localhost:5000/form', values);
                 notify("Registration successful!");
+                Navigate("/login")
             } catch (error) {
                 if (error.response && error.response.status === 400) {
                     
                     notify(error.response.data, 'error');
+                    
                 } else {
                     console.error('Error submitting form:', error);
                     notify("An unexpected error occurred.", 'error');
@@ -89,9 +93,9 @@ const FormComponent = () => {
     });
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <div className="text-center bg-white w-auto h-full shadow-md rounded p-6">
-                <h1 className='text-2xl font-extrabold mb-8'>Form</h1>
+        <div className="flex items-center justify-center  min-h-screen bg-gray-100">
+            <div className="text-center bg-white w-auto shadow-md shadow-gray-500 rounded-3xl h-full p-6">
+                <h1 className='text-2xl font-extrabold mb-8'>Register</h1>
                 <form onSubmit={formik.handleSubmit}>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
