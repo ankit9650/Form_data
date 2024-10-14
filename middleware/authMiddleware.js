@@ -1,9 +1,9 @@
-// middlewares/authMiddleware.js
+
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = 'your_secret_key'; // Use a secure key
+const SECRET_KEY = 'Ankit12'; 
 
 const authMiddleware = (req, res, next) => {
-    const token = req.headers['authorization'];
+    const token = req.headers['auth'];
 
     if (!token) {
         return res.status(401).send('Access denied. No token provided.');
@@ -11,8 +11,8 @@ const authMiddleware = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, SECRET_KEY);
-        req.user = decoded; // Store user info in request
-        next(); // Pass control to the next middleware or route handler
+        req.user = decoded; 
+        next();
     } catch (ex) {
         return res.status(400).send('Invalid token.');
     }
