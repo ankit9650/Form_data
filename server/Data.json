@@ -1,66 +1,30 @@
 [
   {
-    "email": "ankitp12@g.com",
-    "password": "$2b$10$dmBf0GiZpEhuLhM4PrPZC./duRvNQ.kzAatSx3zwX5bu5XuvYBD2K",
-    "phone": "1231231231",
-    "username": "ankit12",
+    "email": "ankitprabhaker9650@gmail.com",
+    "password": "$2b$10$LeZ5P.KrKeIkQ2s73yWeKOPHFt6mN12STiUUmxk0peOAql8mELcKu",
+    "phone": "8700141237",
+    "username": "ankit32",
     "hobbies": [
       "Travelling",
       "Cricket"
     ],
     "gender": "Male",
-    "dob": "2024-10-07",
-    "id": "bf587f86-0a50-4582-b965-81f3b9445808"
+    "dob": "2024-10-01",
+    "accountType": "Admin",
+    "id": "dab49f51-f075-4a38-b017-bea813de2500"
   },
   {
-    "email": "pra12@g.com",
-    "password": "$2b$10$eN.GD96QkULSiZGuzeiXXubUGUORaLZgzLfhfaU.I2E.QB9nBB6sC",
-    "phone": "9012312312",
-    "username": "prabhaker321",
-    "hobbies": [
-      "Travelling",
-      "Cricket",
-      "Singing"
-    ],
-    "gender": "Male",
-    "dob": "2024-10-05",
-    "id": "2414c112-479d-4f65-a708-a9e86ca518c5"
-  },
-  {
-    "email": "rahul1@g.com",
-    "password": "$2b$10$m0uf2T9zLUkBNwwbmw4BOuyeNyLEkNruJEcdzFSVFmREjMeEoVq72",
-    "phone": "3423343243",
+    "email": "rahul12@g.com",
+    "password": "$2b$10$TJ2.RFJnMITKfWmJVh0K7.alnnNv1saRvn2jwB8.M298Ju2PJS3p2",
+    "phone": "1231231212",
     "username": "Rahul12",
     "hobbies": [
-      "Cricket"
-    ],
-    "gender": "Male",
-    "dob": "2024-10-08",
-    "id": "7da03322-c07f-4363-9cd1-7520d85b20b4"
-  },
-  {
-    "email": "demo12@g.com",
-    "password": "$2b$10$tA9ZiKlOiVz/DSdqMN3LouhPqRbvjtX3TZ9NIAPn0QArHB1AL7lmu",
-    "phone": "8012312311",
-    "username": "Demo12",
-    "hobbies": [
       "Travelling",
-      "Cricket"
+      "Singing"
     ],
     "gender": "Female",
-    "dob": "2024-10-07",
-    "id": "1be7efcb-0676-4abf-a1d8-258e7d739b85"
-  },
-  {
-    "email": "testing@12.com",
-    "password": "$2b$10$1dpHOoQje2VfI4iq13Ga2emJIpxASP4GLI9gZDJJhmfHpnmsaJp0y",
-    "phone": "8012123312",
-    "username": "test12",
-    "hobbies": [
-      "Travelling"
-    ],
-    "gender": "Male",
-    "dob": "2024-09-30",
-    "id": "e239abe2-4857-41a9-bc6f-86e6e6f6c08a"
+    "dob": "2024-10-11",
+    "accountType": "User",
+    "id": "7dc6c3ef-b172-470d-b168-19a6b8d538ef"
   }
 ]
