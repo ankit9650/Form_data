@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const FormComponent = () => {
-    const Navigate = useNavigate()
+    const [adminExists, setAdminExists] = useState(false);
+    const Navigate = useNavigate();
+
     const notify = (message, type = 'success') => {
         if (type === 'error') {
             toast.error(message);
@@ -14,6 +16,22 @@ const FormComponent = () => {
             toast.success(message);
         }
     };
+
+    useEffect(() => {
+        const checkAdminExists = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/register', {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` }
+                });
+                const adminAccount = response.data.some(user => user.accountType === "Admin");
+                setAdminExists(adminAccount);
+
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+        checkAdminExists();
+    }, []);
 
     const formik = useFormik({
         initialValues: {
@@ -24,8 +42,9 @@ const FormComponent = () => {
             hobbies: [],
             gender: "",
             dob: "",
+            accountType: ""
         },
-        
+
         validate: values => {
             const errors = {};
             const phoneRegExp = /^[0-9]{10}$/;
@@ -34,19 +53,19 @@ const FormComponent = () => {
             const passRegExp = /^.{6}$/;
 
             if (!values.username) {
-                errors.username = "Required..!"; 
+                errors.username = "Required..!";
             } else if (!usernameRegExp.test(values.username)) {
                 errors.username = "Username invalid";
             }
 
             if (!values.email) {
-                errors.email = "Required..!"; 
+                errors.email = "Required..!";
             } else if (!emailRegExp.test(values.email)) {
                 errors.email = "Invalid email address";
             }
 
             if (!values.password) {
-                errors.password = "Required..!"; 
+                errors.password = "Required..!";
             } else if (!passRegExp.test(values.password)) {
                 errors.password = "Only 6 characters allowed";
             }
@@ -65,6 +84,10 @@ const FormComponent = () => {
                 errors.gender = 'Gender is required';
             }
 
+            if (!values.accountType) {
+                errors.accountType = 'Account Type is required';
+            }
+
             if (!values.dob) {
                 errors.dob = 'Date of birth is required';
             } else if (new Date(values.dob) > new Date()) {
@@ -74,16 +97,14 @@ const FormComponent = () => {
             return errors;
         },
 
-        onSubmit: async (values) => { 
+        onSubmit: async (values) => {
             try {
-                const response = await axios.post('http://localhost:5000/form', values);
-                notify("Registration successful!");
-                Navigate("/login")
+                await axios.post('http://localhost:5000/register', values);
+                notify("User Registered!");
+                Navigate("/login");
             } catch (error) {
                 if (error.response && error.response.status === 400) {
-                    
                     notify(error.response.data, 'error');
-                    
                 } else {
                     console.error('Error submitting form:', error);
                     notify("An unexpected error occurred.", 'error');
@@ -93,8 +114,9 @@ const FormComponent = () => {
     });
 
     return (
-        <div className="flex items-center justify-center  min-h-screen bg-gray-100">
-            <div className="text-center bg-white w-auto shadow-md shadow-gray-500 rounded-3xl h-full p-6">
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+            <ToastContainer />
+            <div className="text-center bg-white w-auto shadow-md shadow-gray-500 rounded-3xl h-full mt-32 mb-12 p-6">
                 <h1 className='text-2xl font-extrabold mb-8'>Register</h1>
                 <form onSubmit={formik.handleSubmit}>
                     <div className="grid grid-cols-2 gap-4">
@@ -178,7 +200,71 @@ const FormComponent = () => {
                         </div>
                     </div>
 
-                    <div className='flex flex-col items-center mb-4'>
+                    <div className='flex items-center justify-between mt-5 mb-4'>
+                        <div className='flex-1 mr-2'>
+                            <label htmlFor="gender" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
+                            <select
+                                id="gender"
+                                name="gender"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.gender}
+                            >
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            <div className='text-red-600'>
+                                {formik.touched.gender && formik.errors.gender ? formik.errors.gender : null}
+                            </div>
+                        </div>
+
+                        <div className='flex-1 ml-2'>
+                            <label htmlFor="accountType" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Account Type:</label>
+                            <select
+                                id="accountType"
+                                name="accountType"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.accountType}
+                            >
+                                {!adminExists && <option value="Admin">Admin</option>}
+                                <option value="User">User</option>
+                            </select>
+                            <div className='text-red-600'>
+                                {formik.touched.accountType && formik.errors.accountType ? formik.errors.accountType : null}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-col items-center mt-5 mb-4">
+                        <label htmlFor="accountType" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Upload profile:</label>
+
+                        <label
+                            htmlFor="fileUpload"
+                            className="flex bg-gray-800 hover:bg-gray-700 text-white text-sm px-4 py-2 rounded cursor-pointer mx-auto font-[sans-serif] w-64" // Adjust width here
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-5 mr-1 fill-white inline"
+                                viewBox="0 0 32 32"
+                            >
+                                <path d="M23.75 11.044a7.99 7.99 0 0 0-15.5-.009A8 8 0 0 0 9 27h3a1 1 0 0 0 0-2H9a6 6 0 0 1-.035-12 1.038 1.038 0 0 0 1.1-.854 5.991 5.991 0 0 1 11.862 0A1.08 1.08 0 0 0 23 13a6 6 0 0 1 0 12h-3a1 1 0 0 0 0 2h3a8 8 0 0 0 .75-15.956z" />
+                                <path d="M20.293 19.707a1 1 0 0 0 1.414-1.414l-5-5a1 1 0 0 0-1.414 0l-5 5a1 1 0 0 0 1.414 1.414L15 16.414V29a1 1 0 0 0 2 0V16.414z" />
+                            </svg>
+                            Upload
+                            <input
+                                type="file"
+                                id="fileUpload"
+                                className="hidden" // Hides the default file input
+                                onChange={formik.handleChange} // Handle change event if needed
+                            />
+                        </label>
+                    </div>
+
+
+                    {/* Gender Radio */}
+                    {/* <div className='flex flex-col items-center mb-4'>
                         <label className='block text-xs font-medium text-gray-700'>GENDER:</label>
                         <div className='flex gap-4 items-center justify-center'>
                             <label htmlFor="">Male</label>
@@ -189,10 +275,10 @@ const FormComponent = () => {
                         <div className='text-red-600'>
                             {formik.touched.gender && formik.errors.gender ? formik.errors.gender : null}
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className='mb-4'>
-                        <label className='block text-xs font-medium text-gray-700'>DOB:</label>
+                        <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Date of Birth:</label>
                         <input
                             type="date"
                             name="dob"
@@ -213,6 +299,9 @@ const FormComponent = () => {
                         Submit
                     </button>
                     <ToastContainer />
+
+
+
                 </form>
             </div>
         </div>

@@ -2,9 +2,11 @@ import React from 'react'
 
 function Footer() {
     return (
-        <div>
-            <h1>Hey i am footer component</h1>
-        </div>
+        <footer className="footer footer-center text-center bg-gray-200 text-base-content p-4">
+        <aside>
+          <p className='font-bold'>Copyright © {new Date().getFullYear()} - All right reserved by Ankit</p>
+        </aside>
+      </footer>
     )
 }
 

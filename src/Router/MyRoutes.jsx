@@ -4,9 +4,10 @@ import FormComponent from "../Components/FormComponent";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import Login from '../Pages/Login';
-import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import ProtectedRoute from '../Router/ProtectedRoute';
 
 import Data from '../Components/Data'
+import Home from '../Pages/Home';
 
 function MyRoutes() {
   return (
@@ -14,13 +15,11 @@ function MyRoutes() {
       <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/form" element={<FormComponent />} />
-
-        
+        <Route path="/register" element={<FormComponent />} />       
       
-        <Route element={<ProtectedRoute />}>
-         
+        <Route element={<ProtectedRoute />}>         
           <Route path='/data' element={<Data/>}/>
+          <Route path='/home' element={<Home/>}/>
         </Route>
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
