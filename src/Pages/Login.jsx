@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { ToastContainer, toast } from 'react-toastify';
@@ -8,7 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
     const navigate = useNavigate();
-
+    
     const validationSchema = Yup.object().shape({
         username: Yup.string().required('Username is required'),
         password: Yup.string().required("Cannot be empty!"),
@@ -22,22 +22,19 @@ function Login() {
     const onSubmit = async (values) => {
         const notifySuccess = () => toast.success("Login Successful!");
         const notifyError = (message) => toast.error(message || "Login Failed");
-    
+
         try {
             const logResponse = await axios.post('http://localhost:5000/login', values);
             
             if (logResponse.status === 200) {
-                const { token, userType } = logResponse.data;
-                console.log("Token value checking:", token);
+                const { token } = logResponse.data;
                 localStorage.setItem('jwtToken', token);
-                notifySuccess();    
-                navigate("/data");
-             
+                notifySuccess();
+                navigate("/data");                
             }
 
         } catch (error) {
             console.error('Error submitting form:', error);
-            
             if (error.response && error.response.data) {
                 notifyError(error.response.data);
             } else {
@@ -45,9 +42,27 @@ function Login() {
             }
         }
     };
-    
-    
 
+    
+    useEffect(() => {
+        const checkLoggedIn = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/register', {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` }
+                });                
+                const token = localStorage.getItem('jwtToken');
+                if (token) {
+                    
+                    navigate("/data", { replace: true }); 
+                }
+            } catch (error) {
+                console.error("Protected route", error);
+               
+            }
+        };
+        checkLoggedIn();
+    }, [navigate]);
+  
     return (
         <>
             <ToastContainer />

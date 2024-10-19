@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 const FormComponent = () => {
     const [adminExists, setAdminExists] = useState(false);
-    const Navigate = useNavigate();
+    const navigate = useNavigate();
 
     const notify = (message, type = 'success') => {
         if (type === 'error') {
@@ -25,7 +25,6 @@ const FormComponent = () => {
                 });
                 const adminAccount = response.data.some(user => user.accountType === "Admin");
                 setAdminExists(adminAccount);
-
             } catch (error) {
                 console.error('Error fetching users:', error);
             }
@@ -42,7 +41,8 @@ const FormComponent = () => {
             hobbies: [],
             gender: "",
             dob: "",
-            accountType: ""
+            accountType: "",
+            Avatar: null 
         },
 
         validate: values => {
@@ -53,55 +53,68 @@ const FormComponent = () => {
             const passRegExp = /^.{6}$/;
 
             if (!values.username) {
-                errors.username = "Required..!";
+                errors.username = "Required..!"; 
             } else if (!usernameRegExp.test(values.username)) {
                 errors.username = "Username invalid";
             }
 
             if (!values.email) {
-                errors.email = "Required..!";
+                errors.email = "Required..!"; 
             } else if (!emailRegExp.test(values.email)) {
-                errors.email = "Invalid email address";
+                errors.email = "Invalid email address"; 
             }
 
             if (!values.password) {
-                errors.password = "Required..!";
+                errors.password = "Required..!"; 
             } else if (!passRegExp.test(values.password)) {
-                errors.password = "Only 6 characters allowed";
+                errors.password = "Only 6 characters allowed"; 
             }
 
             if (!values.phone) {
-                errors.phone = 'Phone number is required';
+                errors.phone = 'Phone number is required'; 
             } else if (!phoneRegExp.test(values.phone)) {
-                errors.phone = 'Phone number must be 10 digits';
+                errors.phone = 'Phone number must be 10 digits'; 
             }
 
             if (values.hobbies.length === 0) {
-                errors.hobbies = 'At least one hobby must be selected';
+                errors.hobbies = 'At least one hobby must be selected'; 
             }
 
             if (!values.gender) {
-                errors.gender = 'Gender is required';
+                errors.gender = 'Gender is required'; 
             }
 
             if (!values.accountType) {
-                errors.accountType = 'Account Type is required';
+                errors.accountType = 'Account Type is required'; 
+            }
+            if (!values.Avatar) {
+                errors.Avatar = 'Profile is required'; 
             }
 
             if (!values.dob) {
-                errors.dob = 'Date of birth is required';
+                errors.dob = 'Date of birth is required'; 
             } else if (new Date(values.dob) > new Date()) {
-                errors.dob = "Date of birth cannot be in the future";
+                errors.dob = "Date of birth cannot be in the future"; 
             }
 
             return errors;
         },
 
         onSubmit: async (values) => {
+            const formData = new FormData();
+            Object.keys(values).forEach(key => {
+                formData.append(key, values[key]);
+            });
+
             try {
-                await axios.post('http://localhost:5000/register', values);
+                await axios.post('http://localhost:5000/register', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
+                    }
+                });
                 notify("User Registered!");
-                Navigate("/login");
+                navigate("/login");
             } catch (error) {
                 if (error.response && error.response.status === 400) {
                     notify(error.response.data, 'error');
@@ -113,13 +126,20 @@ const FormComponent = () => {
         },
     });
 
+   
+    const handleFileChange = (event) => {
+        formik.setFieldValue("Avatar", event.currentTarget.files[0]);
+    };
+
+
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <ToastContainer />
             <div className="text-center bg-white w-auto shadow-md shadow-gray-500 rounded-3xl h-full mt-32 mb-12 p-6">
                 <h1 className='text-2xl font-extrabold mb-8'>Register</h1>
-                <form onSubmit={formik.handleSubmit}>
+                <form onSubmit={formik.handleSubmit} enctype="multipart/form-data">
                     <div className="grid grid-cols-2 gap-4">
+                        {/* username */}
                         <div>
                             <label htmlFor="username" className='block text-sm font-medium text-gray-700'>Username:</label>
                             <input
@@ -135,7 +155,7 @@ const FormComponent = () => {
                                 {formik.touched.username && formik.errors.username ? formik.errors.username : null}
                             </div>
                         </div>
-
+                        {/* email */}
                         <div>
                             <label htmlFor="email" className='block text-sm font-medium text-gray-700'>Email:</label>
                             <input
@@ -151,7 +171,7 @@ const FormComponent = () => {
                                 {formik.touched.email && formik.errors.email ? formik.errors.email : null}
                             </div>
                         </div>
-
+                        {/* phone */}
                         <div>
                             <label htmlFor="phone" className='block text-sm font-medium text-gray-700'>Phone:</label>
                             <input
@@ -167,7 +187,7 @@ const FormComponent = () => {
                                 {formik.touched.phone && formik.errors.phone ? formik.errors.phone : null}
                             </div>
                         </div>
-
+                        {/* password */}
                         <div>
                             <label htmlFor="password" className='block text-sm font-medium text-gray-700'>Password:</label>
                             <input
@@ -184,7 +204,7 @@ const FormComponent = () => {
                             </div>
                         </div>
                     </div>
-
+                        {/* hobbies */}
                     <div className='flex flex-col items-center mt-5 mb-4'>
                         <label className='block text-xs font-medium text-gray-700'>HOBBIES:</label>
                         <div className='flex gap-4 items-center justify-center'>
@@ -199,7 +219,7 @@ const FormComponent = () => {
                             {formik.touched.hobbies && formik.errors.hobbies ? formik.errors.hobbies : null}
                         </div>
                     </div>
-
+                        {/* Gender */}
                     <div className='flex items-center justify-between mt-5 mb-4'>
                         <div className='flex-1 mr-2'>
                             <label htmlFor="gender" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
@@ -237,29 +257,19 @@ const FormComponent = () => {
                             </div>
                         </div>
                     </div>
+                   
                     <div className="flex flex-col items-center mt-5 mb-4">
-                        <label htmlFor="accountType" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Upload profile:</label>
-
-                        <label
-                            htmlFor="fileUpload"
-                            className="flex bg-gray-800 hover:bg-gray-700 text-white text-sm px-4 py-2 rounded cursor-pointer mx-auto font-[sans-serif] w-64" // Adjust width here
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="w-5 mr-1 fill-white inline"
-                                viewBox="0 0 32 32"
-                            >
-                                <path d="M23.75 11.044a7.99 7.99 0 0 0-15.5-.009A8 8 0 0 0 9 27h3a1 1 0 0 0 0-2H9a6 6 0 0 1-.035-12 1.038 1.038 0 0 0 1.1-.854 5.991 5.991 0 0 1 11.862 0A1.08 1.08 0 0 0 23 13a6 6 0 0 1 0 12h-3a1 1 0 0 0 0 2h3a8 8 0 0 0 .75-15.956z" />
-                                <path d="M20.293 19.707a1 1 0 0 0 1.414-1.414l-5-5a1 1 0 0 0-1.414 0l-5 5a1 1 0 0 0 1.414 1.414L15 16.414V29a1 1 0 0 0 2 0V16.414z" />
-                            </svg>
-                            Upload
-                            <input
-                                type="file"
-                                id="fileUpload"
-                                className="hidden" // Hides the default file input
-                                onChange={formik.handleChange} // Handle change event if needed
-                            />
-                        </label>
+                        <label htmlFor="Avatar" className="block mb-2 text-sm font-medium text-gray-900">Upload Profile:</label>
+                        <input
+                            type="file"
+                            name="Avatar"
+                            id="Avatar"
+                            className='p-2.5'
+                            onChange={handleFileChange}
+                        />
+                        <div className='text-red-600'>
+                            {formik.touched.Avatar && formik.errors.Avatar ? formik.errors.Avatar : null}
+                        </div>
                     </div>
 
 
@@ -276,7 +286,8 @@ const FormComponent = () => {
                             {formik.touched.gender && formik.errors.gender ? formik.errors.gender : null}
                         </div>
                     </div> */}
-
+                    
+                    {/* DOB */}
                     <div className='mb-4'>
                         <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Date of Birth:</label>
                         <input

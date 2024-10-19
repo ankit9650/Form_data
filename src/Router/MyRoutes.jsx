@@ -7,6 +7,8 @@ import Login from '../Pages/Login';
 import ProtectedRoute from '../Router/ProtectedRoute';
 
 import Data from '../Components/Data'
+
+import Product from '../Pages/Product';
 import Home from '../Pages/Home';
 
 function MyRoutes() {
@@ -15,11 +17,13 @@ function MyRoutes() {
       <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<FormComponent />} />       
+        <Route path="/register" element={<FormComponent />} />      
       
         <Route element={<ProtectedRoute />}>         
           <Route path='/data' element={<Data/>}/>
+          <Route path='/product' element={<Product/>}/>
           <Route path='/home' element={<Home/>}/>
+
         </Route>
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
