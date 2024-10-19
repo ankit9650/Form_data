@@ -1,30 +1,26 @@
 [
   {
     "email": "ankitprabhaker9650@gmail.com",
-    "password": "$2b$10$LeZ5P.KrKeIkQ2s73yWeKOPHFt6mN12STiUUmxk0peOAql8mELcKu",
+    "password": "$2b$10$PI.JmwYoTD2D5NymjKMxB.5tfIb.fQCckgCpHvhCGxg8xEZQb8lky",
     "phone": "8700141237",
     "username": "ankit32",
-    "hobbies": [
-      "Travelling",
-      "Cricket"
-    ],
+    "hobbies": "Travelling,Cricket",
     "gender": "Male",
     "dob": "2024-10-01",
     "accountType": "Admin",
-    "id": "dab49f51-f075-4a38-b017-bea813de2500"
+    "id": "360ce7cc-b08f-413a-8663-53232ed5c5e3",
+    "Avatar": "/uploads/1729315070585_images (1).jpeg"
   },
   {
     "email": "rahul12@g.com",
-    "password": "$2b$10$TJ2.RFJnMITKfWmJVh0K7.alnnNv1saRvn2jwB8.M298Ju2PJS3p2",
+    "password": "$2b$10$H9.fdbZY6k2xtNOqKBZ2gujjL5hSJhbGh1FNUtBKhdDrIXq7RnOiq",
     "phone": "1231231212",
     "username": "Rahul12",
-    "hobbies": [
-      "Travelling",
-      "Singing"
-    ],
-    "gender": "Female",
-    "dob": "2024-10-11",
+    "hobbies": "Travelling,Singing",
+    "gender": "Male",
+    "dob": "2024-10-01",
     "accountType": "User",
-    "id": "7dc6c3ef-b172-470d-b168-19a6b8d538ef"
+    "id": "0b389432-5492-48f0-84ac-9585dd7517db",
+    "Avatar": "/uploads/1729315269875_images.jpeg"
   }
 ]

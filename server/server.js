@@ -1,21 +1,46 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const multer = require('multer');
 const authMiddleware = require('../middleware/authMiddleware.js');
+
 const app = express();
 const saltRounds = 10;
-const formpath = 'Data.json';
-const SECRET_KEY = 'Ankit12';
+const formPath = 'Data.json'; 
+const SECRET_KEY = 'Ankit12';  
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+
+const uploadDir = path.join(__dirname, 'server/Form/public');
+app.use('/uploads', express.static(uploadDir));
+
+
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+//  Multer 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}_${file.originalname}`);
+    }
+});
+
+const upload = multer({ storage });
+
+// read data from the JSON file
 const readFile = (callback) => {
-    fs.readFile(formpath, 'utf8', (err, data) => {
+    fs.readFile(formPath, 'utf8', (err, data) => {
         if (err) {
             console.error('Error reading file:', err);
             return callback(err);
@@ -30,8 +55,9 @@ const readFile = (callback) => {
     });
 };
 
+
 const writeFile = (users, res) => {
-    fs.writeFile(formpath, JSON.stringify(users, null, 2), (err) => {
+    fs.writeFile(formPath, JSON.stringify(users, null, 2), (err) => {
         if (err) {
             console.error('Error writing file:', err);
             return res.status(500).send('Error writing file');
@@ -41,28 +67,40 @@ const writeFile = (users, res) => {
     });
 };
 
-// Register 
-
-app.post("/register", async (req, res) => {
+// Register endpoint
+app.post("/register", upload.single('Avatar'), async (req, res) => {
     const formData = req.body;
+
+    console.log("Form Data:", formData); 
+
+    if (!formData.password) {
+        return res.status(400).send('Password is required');
+    }
+
     try {
         const hashedPassword = await bcrypt.hash(formData.password, saltRounds);
-        const formid = { ...formData, password: hashedPassword, id: uuidv4() };
+        const newUser = { 
+            ...formData, 
+            password: hashedPassword,
+            id: uuidv4(),
+            Avatar: req.file ? `/uploads/${req.file.filename}` : null 
+        };
 
         readFile((err, users) => {
             if (err) return res.status(500).send('Error reading users');
-            const isExist = users.some(item => item.username === formid.username);
-
+            
+            const userExists = users.some(item => item.username === newUser.username);
             const adminExists = users.some(item => item.accountType === "Admin");
-            if (formid.accountType === "Admin" && adminExists) {
+
+            if (newUser.accountType === "Admin" && adminExists) {
                 return res.status(400).send('An admin account already exists');
             }
 
-            if (isExist) {
+            if (userExists) {
                 return res.status(400).send('User is already registered');
             }
 
-            users.push(formid);
+            users.push(newUser);
             writeFile(users, res);
         });
     } catch (hashError) {
@@ -71,8 +109,27 @@ app.post("/register", async (req, res) => {
     }
 });
 
-// Update 
+// Get users endpoint
+app.get('/register', authMiddleware, (req, res) => {
+    const currentUser = req.user; 
 
+    readFile((err, users) => {
+        if (err) return res.status(500).send('Error reading users');
+
+        if (currentUser.accountType === 'Admin') {
+            return res.status(200).json(users);
+        } else {
+            const userDetail = users.find(user => user.id === currentUser.id);
+            if (userDetail) {
+                return res.status(200).json([userDetail]); 
+            }
+        }
+        
+        res.status(200).json([]); 
+    });
+});
+
+// Update user endpoint
 app.put('/register/:id', authMiddleware, (req, res) => {
     const userId = req.params.id;
 
@@ -81,6 +138,7 @@ app.put('/register/:id', authMiddleware, (req, res) => {
 
         const index = users.findIndex(user => user.id === userId);
         if (index !== -1) {
+            
             users[index] = { ...users[index], ...req.body };
             writeFile(users, res);
         } else {
@@ -89,8 +147,7 @@ app.put('/register/:id', authMiddleware, (req, res) => {
     });
 });
 
-// Delete
-
+// Delete user endpoint
 app.delete('/register/:id', authMiddleware, (req, res) => {
     const userId = req.params.id;
 
@@ -102,32 +159,7 @@ app.delete('/register/:id', authMiddleware, (req, res) => {
     });
 });
 
-// Get 
-app.get('/register', authMiddleware, (req, res) => {
-    const currentUser = req.user; // Get the current user from the request
-
-    readFile((err, users) => {
-        if (err) return res.status(500).send('Error reading users');
-
-        if (currentUser.accountType === 'Admin') {
-            // Admins get all users
-            return res.status(200).json(users);
-        } else {
-            // Non-admin users get their own user details
-            const userDetail = users.find(user => user.id === currentUser.id);
-            if (userDetail) {
-                return res.status(200).json([userDetail]); // Return the user's details as an array
-            }
-        }
-        // In case there's no user found, return an empty array
-        res.status(200).json([]);
-    });
-});
-
-
-
-
-// Login
+// Login endpoint
 app.post("/login", async (req, res) => {
     const loginData = req.body;
 
@@ -144,7 +176,7 @@ app.post("/login", async (req, res) => {
             const token = jwt.sign(
                 { id: user.id, username: user.username, accountType: user.accountType },
                 SECRET_KEY,
-                { expiresIn: '24h' }
+                { expiresIn: '1h' }
             );
             return res.status(200).send({
                 statusCode: 200,
@@ -157,13 +189,24 @@ app.post("/login", async (req, res) => {
     });
 });
 
+// list product
 
 
+
+
+
+
+
+
+
+
+// Protected route example
 app.get('/protected', authMiddleware, (req, res) => {
     res.status(200).send('This is a protected route. Welcome, ' + req.user.username + '!');
 });
 
-
-app.listen(5000, () => {
-    console.log(`Server is running at http://localhost:5000!`);
+// Start the server
+const PORT = 5000;
+app.listen(PORT, () => {
+    console.log(`Server is running at http://localhost:${PORT}!`);
 });
