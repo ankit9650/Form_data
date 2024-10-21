@@ -1,26 +1,83 @@
-[
-  {
-    "email": "ankitprabhaker9650@gmail.com",
-    "password": "$2b$10$PI.JmwYoTD2D5NymjKMxB.5tfIb.fQCckgCpHvhCGxg8xEZQb8lky",
-    "phone": "8700141237",
-    "username": "ankit32",
-    "hobbies": "Travelling,Cricket",
-    "gender": "Male",
-    "dob": "2024-10-01",
-    "accountType": "Admin",
-    "id": "360ce7cc-b08f-413a-8663-53232ed5c5e3",
-    "Avatar": "/uploads/1729315070585_images (1).jpeg"
-  },
-  {
-    "email": "rahul12@g.com",
-    "password": "$2b$10$H9.fdbZY6k2xtNOqKBZ2gujjL5hSJhbGh1FNUtBKhdDrIXq7RnOiq",
-    "phone": "1231231212",
-    "username": "Rahul12",
-    "hobbies": "Travelling,Singing",
-    "gender": "Male",
-    "dob": "2024-10-01",
-    "accountType": "User",
-    "id": "0b389432-5492-48f0-84ac-9585dd7517db",
-    "Avatar": "/uploads/1729315269875_images.jpeg"
-  }
-]
+{
+  "users": [
+    {
+      "email": "ankitprabhaker9650@gmail.com",
+      "password": "$2b$10$n5tgMTxY0Rter/GU0jTX8uLz7YBCwX/JLFQZ02Bwx0JTzMLLq6L.m",
+      "phone": "8700141237",
+      "username": "ankit32",
+      "hobbies": "Cricket,Singing",
+      "gender": "Male",
+      "dob": "2024-10-01",
+      "accountType": "Admin",
+      "id": "d2736b94-00c1-4521-9db9-52cdbe660b61",
+      "Avatar": "/uploads/1729509831338_images (1).jpeg"
+    },
+    {
+      "email": "rahul123@gmail.com",
+      "password": "$2b$10$/qrZg09On2rjlahrsRMbu.lnv1Ae4gEM1svUYZn.gl.mCNdFWHQt6",
+      "phone": "1231231212",
+      "username": "Rahul12",
+      "hobbies": "Cricket,Travelling",
+      "gender": "Male",
+      "dob": "2024-10-02",
+      "accountType": "User",
+      "id": "72465ea3-185d-4e97-b422-f14324ad95f4",
+      "Avatar": "/uploads/1729509887178_images.jpeg"
+    },
+    {
+      "email": "demo12@g.com",
+      "password": "$2b$10$nYymr8dD/PYUw5qOUJm6z.ZJSg.KGxwrPnmdSEckiU2LKkseILgaa",
+      "phone": "7645233567",
+      "username": "Demo12",
+      "hobbies": "Travelling,Cricket",
+      "gender": "Female",
+      "dob": "2024-10-05",
+      "accountType": "User",
+      "id": "67c951df-8a33-4456-9771-659053273d24",
+      "Avatar": "/uploads/1729510399176_images (2).jpeg"
+    }
+  ],
+  "products": [
+    {
+      "productid": "9d23e842-bf67-46f5-9c87-22efc073d822",
+      "title": "Books ",
+      "unit": "5",
+      "color": "red",
+      "price": "120",
+      "prodimg": "/uploads/stack-books-against-background-library-600nw-2459213053.webp",
+      "userId": "72465ea3-185d-4e97-b422-f14324ad95f4",
+      "userName": "Rahul12"
+
+    },
+    {
+      "productid": "586b477c-7997-43ff-a18d-0eb21631efa7",
+      "title": "Bottle",
+      "unit": "15",
+      "color": "red",
+      "price": "150",
+      "prodimg": "/uploads/1729510084779_organic-cosmetic-product-with-dreamy-aesthetic-fresh-background_23-2151382816.avif",
+      "userId": "72465ea3-185d-4e97-b422-f14324ad95f4",
+      "userName": "Rahul12"
+    },
+    {
+      "productid": "9411f2f7-a534-483e-931b-fd98b8369c79",
+      "title": "Watch",
+      "unit": "10",
+      "color": "blue",
+      "price": "1200",
+      "prodimg": "/uploads/1729510496987_download.jpeg",
+      "userId": "67c951df-8a33-4456-9771-659053273d24",
+      "userName": "Demo12"
+    },
+    {
+      "productid": "8b9c79bc-82c0-4575-8c4d-aa69b12274b8",
+      "title": "Test Product",
+      "unit": "3",
+      "color": "red",
+      "price": "117",
+      "prodimg": "/uploads/1729511773108_istockphoto-495477978-612x612.jpg",
+      "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
+      "userName": "ankit32"
+    }
+  ]
+}

@@ -17,16 +17,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
 const uploadDir = path.join(__dirname, 'server/Form/public');
 app.use('/uploads', express.static(uploadDir));
-
 
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-//  Multer 
+// Multer 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, uploadDir);
@@ -38,7 +36,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// read data from the JSON file
+// Read data 
 const readFile = (callback) => {
     fs.readFile(formPath, 'utf8', (err, data) => {
         if (err) {
@@ -46,8 +44,8 @@ const readFile = (callback) => {
             return callback(err);
         }
         try {
-            const users = JSON.parse(data || '[]');
-            callback(null, users);
+            const jsonData = JSON.parse(data || '{"users": [], "products": []}');
+            callback(null, jsonData);
         } catch (parseError) {
             console.error('Error parsing data:', parseError);
             callback(parseError);
@@ -55,9 +53,9 @@ const readFile = (callback) => {
     });
 };
 
-
-const writeFile = (users, res) => {
-    fs.writeFile(formPath, JSON.stringify(users, null, 2), (err) => {
+// Write data 
+const writeFile = (data, res) => {
+    fs.writeFile(formPath, JSON.stringify(data, null, 2), (err) => {
         if (err) {
             console.error('Error writing file:', err);
             return res.status(500).send('Error writing file');
@@ -86,9 +84,10 @@ app.post("/register", upload.single('Avatar'), async (req, res) => {
             Avatar: req.file ? `/uploads/${req.file.filename}` : null 
         };
 
-        readFile((err, users) => {
+        readFile((err, data) => {
             if (err) return res.status(500).send('Error reading users');
             
+            const users = data.users;
             const userExists = users.some(item => item.username === newUser.username);
             const adminExists = users.some(item => item.accountType === "Admin");
 
@@ -101,7 +100,7 @@ app.post("/register", upload.single('Avatar'), async (req, res) => {
             }
 
             users.push(newUser);
-            writeFile(users, res);
+            writeFile(data, res);
         });
     } catch (hashError) {
         console.error('Error hashing password:', hashError);
@@ -113,9 +112,10 @@ app.post("/register", upload.single('Avatar'), async (req, res) => {
 app.get('/register', authMiddleware, (req, res) => {
     const currentUser = req.user; 
 
-    readFile((err, users) => {
+    readFile((err, data) => {
         if (err) return res.status(500).send('Error reading users');
 
+        const users = data.users;
         if (currentUser.accountType === 'Admin') {
             return res.status(200).json(users);
         } else {
@@ -130,20 +130,34 @@ app.get('/register', authMiddleware, (req, res) => {
 });
 
 // Update user endpoint
-app.put('/register/:id', authMiddleware, (req, res) => {
+app.put("/register/:id", authMiddleware, upload.single('avatar'), (req, res) => {
     const userId = req.params.id;
+    const { username, email, phone, hobbies } = req.body;
 
-    readFile((err, users) => {
+    readFile((err, data) => {
         if (err) return res.status(500).send('Error reading users');
 
-        const index = users.findIndex(user => user.id === userId);
-        if (index !== -1) {
-            
-            users[index] = { ...users[index], ...req.body };
-            writeFile(users, res);
-        } else {
-            res.status(404).send('User not found');
+        const users = data.users;
+        const userIndex = users.findIndex(user => user.id === userId);
+
+        if (userIndex === -1) {
+            return res.status(404).json({ message: 'User not found' });
         }
+
+        
+        const updatedUser = {
+            ...users[userIndex], 
+            ...(username && { username }), 
+            ...(email && { email }), 
+            ...(phone && { phone }), 
+            ...(hobbies && { hobbies: JSON.parse(hobbies) }),
+            ...(req.file && { Avatar: `/uploads/${req.file.filename}` }) 
+        };
+
+        
+        users[userIndex] = updatedUser;
+
+        writeFile(data, res);
     });
 });
 
@@ -151,11 +165,13 @@ app.put('/register/:id', authMiddleware, (req, res) => {
 app.delete('/register/:id', authMiddleware, (req, res) => {
     const userId = req.params.id;
 
-    readFile((err, users) => {
+    readFile((err, data) => {
         if (err) return res.status(500).send('Error reading users');
 
+        const users = data.users;
         const updatedUsers = users.filter(user => user.id !== userId);
-        writeFile(updatedUsers, res);
+        data.users = updatedUsers;
+        writeFile(data, res);
     });
 });
 
@@ -163,9 +179,10 @@ app.delete('/register/:id', authMiddleware, (req, res) => {
 app.post("/login", async (req, res) => {
     const loginData = req.body;
 
-    readFile((err, users) => {
+    readFile((err, data) => {
         if (err) return res.status(500).send('Error reading users');
 
+        const users = data.users;
         const user = users.find(item => item.username === loginData.username);
         if (!user) {
             return res.status(400).send('Invalid username or password');
@@ -189,16 +206,63 @@ app.post("/login", async (req, res) => {
     });
 });
 
-// list product
+// Add product endpoint
+    app.post("/product", authMiddleware, upload.single('prodimg'), async (req, res) => {
+        const formData = req.body;
+        console.log(formData)        
+        const newProduct = {            
+            productid:uuidv4(),
+            title: formData.title,
+            unit: formData.unit,
+            color: formData.color,  
+            price: formData.price,
+            prodimg: req.file ? `/uploads/${req.file.filename}` : null,
+            userId: req.user.id,
+            userName: req.user.username
+        };
+        console.log(newProduct)
 
+        readFile((err, data) => {
+            if (err) return res.status(500).send('Error reading products');
+            const products = data.products || [];
+            products.push(newProduct);
+            data.products = products;
+            writeFile(data, res);
+        });
+    });
 
+    // get product
+app.get('/product', authMiddleware, (req, res) => {
+    const currentUser = req.user; 
 
+    readFile((err, data) => {
+        if (err) return res.status(500).send('Error reading products');
 
+        const products = data.products || [];
+        
+        if (currentUser.accountType === 'Admin') {
+            return res.status(200).json(products);
+        } else {
+            
+            const userProducts = products.filter(product => product.userId === currentUser.id);
+            return res.status(200).json(userProducts);
+        }
+    });
+});
 
+// Delete Product
+app.delete('/product/:id', authMiddleware, (req, res) => {
+    const productId = req.params.id;
 
+    readFile((err, data) => {
+        if (err) return res.status(500).send('Error reading Products');
 
-
-
+        const products = data.products;
+        const updatedProducts = products.filter(product => product.id !== productId);
+        data.products = updatedProducts;
+        writeFile(data, res);
+    });
+});
 
 // Protected route example
 app.get('/protected', authMiddleware, (req, res) => {
@@ -210,3 +274,4 @@ const PORT = 5000;
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}!`);
 });
+
