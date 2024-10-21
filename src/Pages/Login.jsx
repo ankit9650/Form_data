@@ -30,7 +30,7 @@ function Login() {
                 const { token } = logResponse.data;
                 localStorage.setItem('jwtToken', token);
                 notifySuccess();
-                navigate("/data");                
+                navigate("/home");                
             }
 
         } catch (error) {

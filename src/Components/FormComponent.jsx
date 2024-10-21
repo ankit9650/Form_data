@@ -57,7 +57,7 @@ const FormComponent = () => {
             } else if (!usernameRegExp.test(values.username)) {
                 errors.username = "Username invalid";
             }
-
+                
             if (!values.email) {
                 errors.email = "Required..!"; 
             } else if (!emailRegExp.test(values.email)) {

@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import FormComponent from "../Components/FormComponent";
 import Navbar from "../Components/Navbar";
-import Footer from "../Components/Footer";
+// import Footer from "../Components/Footer";
 import Login from '../Pages/Login';
 import ProtectedRoute from '../Router/ProtectedRoute';
 
@@ -27,7 +27,7 @@ function MyRoutes() {
         </Route>
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </BrowserRouter>
   );
 }

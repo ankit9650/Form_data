@@ -72,7 +72,7 @@ const Data = () => {
       email: user.email,
       phone: user.phone,
       hobbies: user.hobbies.join(', '),
-      avatar: null // Reset avatar on edit
+      avatar: null
     });
   };
 
@@ -99,13 +99,23 @@ const Data = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
-      setLoginData(loginData.map(user => (user.id === editingUser.id ? response.data : user)));
+
+
+      console.log('Updated user response:', response.data);
+
+
+      setLoginData(prevData =>
+        prevData.map(user => (user.id === editingUser.id ? response.data : user))
+      );
+
       setEditingUser(null);
       setFormData({ username: '', email: '', phone: '', hobbies: '', avatar: null });
     } catch (error) {
       console.error('Error updating user:', error);
+      toast.error('Error updating user');
     }
   };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -134,37 +144,37 @@ const Data = () => {
             </tr>
           </thead>
           <tbody>
-  {Array.isArray(loginData) && loginData.length > 0 ? (
-    loginData.map((item) => (
-      <tr key={item.id} className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>
-      
-<td className='px-6 py-4'>
-  <img 
-    src={`http://localhost:5000/register${item.Avatar}` } 
-    alt="Avatar" 
-    className="w-10 h-10 rounded-full" 
-  />
-</td>
+            {Array.isArray(loginData) && loginData.length > 0 ? (
+              loginData.map((item) => (
+                <tr key={item.id} className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>
 
-        <td className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'>{item.username}</td>
-        <td className='px-6 py-4'>{item.email}</td>
-        <td className='px-8 py-4'>{item.phone}</td>
-        <td className='px-8 py-4'>{Array.isArray(item.hobbies) ? item.hobbies.join(', ') : item.hobbies}</td>
-        <td className='px-6 py-4'>{item.accountType}</td>
-        <td className="flex space-x-8 border px-6 py-4">
-          {userAccountType === "Admin" && (
-            <button onClick={() => handleDelete(item.id)} className='flex items-center bg-transparent hover:bg-red-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-xl'>Delete</button>
-          )}
-          <button onClick={() => handleEdit(item)} className='flex items-center bg-transparent hover:bg-green-700 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-xl'>Edit</button>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan="7">No users found.</td>
-    </tr>
-  )}
-</tbody>
+                  <td className='px-6 py-4'>
+                    <img
+                      src={`http://localhost:5000${item.Avatar}`}
+                      alt="Avatar"
+                      className="w-12 h-12 rounded-full"
+                    />
+                  </td>
+
+                  <td className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'>{item.username}</td>
+                  <td className='px-6 py-4'>{item.email}</td>
+                  <td className='px-8 py-4'>{item.phone}</td>
+                  <td className='px-8 py-4'>{Array.isArray(item.hobbies) ? item.hobbies.join(', ') : item.hobbies}</td>
+                  <td className='px-6 py-4'>{item.accountType}</td>
+                  <td className="flex space-x-8 border px-6 py-4">
+                    {userAccountType === "Admin" && (
+                      <button onClick={() => handleDelete(item.id)} className='flex items-center bg-transparent hover:bg-red-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-xl'>Delete</button>
+                    )}
+                    <button onClick={() => handleEdit(item)} className='flex items-center bg-transparent hover:bg-green-700 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-xl'>Edit</button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7">No users found.</td>
+              </tr>
+            )}
+          </tbody>
 
         </table>
 
