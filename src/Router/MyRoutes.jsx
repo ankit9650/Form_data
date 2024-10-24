@@ -5,9 +5,9 @@ import Navbar from "../Components/Navbar";
 // import Footer from "../Components/Footer";
 import Login from '../Pages/Login';
 import ProtectedRoute from '../Router/ProtectedRoute';
-
+import NotFound from '../Components/NotFound'
 import Data from '../Components/Data'
-
+import ListProd from '../Pages/ListProd';
 import Product from '../Pages/Product';
 import Home from '../Pages/Home';
 
@@ -21,11 +21,12 @@ function MyRoutes() {
       
         <Route element={<ProtectedRoute />}>         
           <Route path='/data' element={<Data/>}/>
-          <Route path='/product' element={<Product/>}/>
-          <Route path='/home' element={<Home/>}/>
+          <Route path='/product' element={<ListProd/>}/>
+          <Route path='/product/add' element={<Product/>}/>
+          <Route path='/home' element={<Home/>}/> 
 
         </Route>
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="*" element={<NotFound/>} />
       </Routes>
       {/* <Footer /> */}
     </BrowserRouter>

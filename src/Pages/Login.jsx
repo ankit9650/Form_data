@@ -28,9 +28,9 @@ function Login() {
             
             if (logResponse.status === 200) {
                 const { token } = logResponse.data;
-                localStorage.setItem('jwtToken', token);
+                localStorage.setItem('jwtToken', token);               
                 notifySuccess();
-                navigate("/home");                
+                navigate("/home");           
             }
 
         } catch (error) {
