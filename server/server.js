@@ -24,7 +24,7 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Multer 
+// Multer configuration
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, uploadDir);
@@ -36,7 +36,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Read data 
+// Read data from file
 const readFile = (callback) => {
     fs.readFile(formPath, 'utf8', (err, data) => {
         if (err) {
@@ -53,7 +53,7 @@ const readFile = (callback) => {
     });
 };
 
-// Write data 
+// Write data to file
 const writeFile = (data, res) => {
     fs.writeFile(formPath, JSON.stringify(data, null, 2), (err) => {
         if (err) {
@@ -68,8 +68,6 @@ const writeFile = (data, res) => {
 // Register endpoint
 app.post("/register", upload.single('Avatar'), async (req, res) => {
     const formData = req.body;
-
-    console.log("Form Data:", formData); 
 
     if (!formData.password) {
         return res.status(400).send('Password is required');
@@ -144,7 +142,6 @@ app.put("/register/:id", authMiddleware, upload.single('avatar'), (req, res) => 
             return res.status(404).json({ message: 'User not found' });
         }
 
-        
         const updatedUser = {
             ...users[userIndex], 
             ...(username && { username }), 
@@ -154,7 +151,6 @@ app.put("/register/:id", authMiddleware, upload.single('avatar'), (req, res) => 
             ...(req.file && { Avatar: `/uploads/${req.file.filename}` }) 
         };
 
-        
         users[userIndex] = updatedUser;
 
         writeFile(data, res);
@@ -164,13 +160,17 @@ app.put("/register/:id", authMiddleware, upload.single('avatar'), (req, res) => 
 // Delete user endpoint
 app.delete('/register/:id', authMiddleware, (req, res) => {
     const userId = req.params.id;
-
+    const currentUser = req.user;     
+    if (currentUser.accountType !== 'Admin') {
+        return res.status(403).send('Only admins can delete users.');
+    }
     readFile((err, data) => {
         if (err) return res.status(500).send('Error reading users');
 
         const users = data.users;
         const updatedUsers = users.filter(user => user.id !== userId);
         data.users = updatedUsers;
+
         writeFile(data, res);
     });
 });
@@ -207,33 +207,30 @@ app.post("/login", async (req, res) => {
 });
 
 // Add product endpoint
-    app.post("/product", authMiddleware, upload.single('prodimg'), async (req, res) => {
-        const formData = req.body;
-        console.log(formData)        
-        const newProduct = {            
-            productid:uuidv4(),
-            title: formData.title,
-            unit: formData.unit,
-            color: formData.color,  
-            price: formData.price,
-            prodimg: req.file ? `/uploads/${req.file.filename}` : null,
-            userId: req.user.id,
-            userName: req.user.username
-        };
-        console.log(newProduct)
+app.post("/product", authMiddleware, upload.single('prodimg'), async (req, res) => {
+    const formData = req.body;
 
-        readFile((err, data) => {
-            if (err) return res.status(500).send('Error reading products');
-            const products = data.products || [];
-            products.push(newProduct);
-            data.products = products;
-            writeFile(data, res);
-        });
+    const newProduct = {
+        productid: uuidv4(),
+        title: formData.title,
+        unit: formData.unit,
+        color: formData.color,
+        price: formData.price,
+        prodimg: req.file ? `/uploads/${req.file.filename}` : null,
+        userId: req.user.id,
+        userName: req.user.username
+    };
+
+    readFile((err, data) => {
+        if (err) return res.status(500).send('Error reading products');
+        data.products.push(newProduct);
+        writeFile(data, res);
     });
+});
 
-    // get product
+// Get products endpoint
 app.get('/product', authMiddleware, (req, res) => {
-    const currentUser = req.user; 
+    const currentUser = req.user;
 
     readFile((err, data) => {
         if (err) return res.status(500).send('Error reading products');
@@ -243,23 +240,68 @@ app.get('/product', authMiddleware, (req, res) => {
         if (currentUser.accountType === 'Admin') {
             return res.status(200).json(products);
         } else {
-            
             const userProducts = products.filter(product => product.userId === currentUser.id);
             return res.status(200).json(userProducts);
         }
     });
 });
 
-// Delete Product
+// Delete Product endpoint
+// Delete Product endpoint
 app.delete('/product/:id', authMiddleware, (req, res) => {
     const productId = req.params.id;
+    const currentUser = req.user;
 
     readFile((err, data) => {
-        if (err) return res.status(500).send('Error reading Products');
+        if (err) return res.status(500).send('Error reading products');
 
         const products = data.products;
-        const updatedProducts = products.filter(product => product.id !== productId);
-        data.products = updatedProducts;
+        const productIndex = products.findIndex(product => product.productid === productId);
+
+        if (productIndex === -1) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+       
+        if (currentUser.accountType !== 'Admin' && products[productIndex].userId !== currentUser.id) {
+            return res.status(403).send('You can only delete your own products.');
+        }
+
+        products.splice(productIndex, 1);
+        writeFile(data, res);
+    });
+});
+
+
+// Update Product endpoint
+app.put("/product/:id", authMiddleware, upload.single('prodimg'), (req, res) => {
+    const productId = req.params.id;
+    const { title, color, unit } = req.body;
+
+    readFile((err, data) => {
+        if (err) {
+            console.error('Error reading products:', err);
+            return res.status(500).send('Error reading products');
+        }
+
+        const products = data.products;
+        const productIndex = products.findIndex(product => product.productid === productId);
+
+        if (productIndex === -1) {
+            console.error('Product not found:', productId);
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        const updatedProduct = {
+            ...products[productIndex],
+            ...(title && { title }),
+            ...(color && { color }),
+            ...(unit && { unit }),
+            ...(req.file && { prodimg: `/uploads/${req.file.filename}` })
+        };
+
+        products[productIndex] = updatedProduct;
+
         writeFile(data, res);
     });
 });
@@ -274,4 +316,5 @@ const PORT = 5000;
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}!`);
 });
+
 

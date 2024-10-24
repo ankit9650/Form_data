@@ -16,8 +16,12 @@
       "email": "rahul123@gmail.com",
       "password": "$2b$10$/qrZg09On2rjlahrsRMbu.lnv1Ae4gEM1svUYZn.gl.mCNdFWHQt6",
       "phone": "1231231212",
-      "username": "Rahul12",
-      "hobbies": "Cricket,Travelling",
+      "username": "rahul12",
+      "hobbies": [
+        "Travelling",
+        "Cricket",
+        "Singing"
+      ],
       "gender": "Male",
       "dob": "2024-10-02",
       "accountType": "User",
@@ -26,28 +30,27 @@
     },
     {
       "email": "demo12@g.com",
-      "password": "$2b$10$nYymr8dD/PYUw5qOUJm6z.ZJSg.KGxwrPnmdSEckiU2LKkseILgaa",
-      "phone": "7645233567",
+      "password": "$2b$10$nBhBpWRblXAoBmH4Ox8q8OwncMPwrn.8klU6eeVlIsDShWwCUQ9L.",
+      "phone": "0912323212",
       "username": "Demo12",
       "hobbies": "Travelling,Cricket",
-      "gender": "Female",
+      "gender": "Male",
       "dob": "2024-10-05",
       "accountType": "User",
-      "id": "67c951df-8a33-4456-9771-659053273d24",
-      "Avatar": "/uploads/1729510399176_images (2).jpeg"
+      "id": "f942fa65-d2cc-48d6-baf4-10d84a1c80dd",
+      "Avatar": "/uploads/1729659257130_images (2).jpeg"
     }
   ],
   "products": [
     {
       "productid": "9d23e842-bf67-46f5-9c87-22efc073d822",
       "title": "Books ",
-      "unit": "5",
+      "unit": "25",
       "color": "red",
       "price": "120",
       "prodimg": "/uploads/stack-books-against-background-library-600nw-2459213053.webp",
       "userId": "72465ea3-185d-4e97-b422-f14324ad95f4",
       "userName": "Rahul12"
-
     },
     {
       "productid": "586b477c-7997-43ff-a18d-0eb21631efa7",
@@ -70,14 +73,184 @@
       "userName": "Demo12"
     },
     {
-      "productid": "8b9c79bc-82c0-4575-8c4d-aa69b12274b8",
-      "title": "Test Product",
-      "unit": "3",
+      "productid": "56699526-f8e4-4b89-aca4-40e36c54773a",
+      "title": "testproduct",
+      "unit": "5",
       "color": "red",
-      "price": "117",
-      "prodimg": "/uploads/1729511773108_istockphoto-495477978-612x612.jpg",
+      "price": "123",
+      "prodimg": "/uploads/1729593790009_istockphoto-495477978-612x612.jpg",
       "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
       "userName": "ankit32"
+    },
+    {
+      "productid": "d12c855b-7237-4143-a98b-8b884e96a8d3",
+      "title": "Test Product3 ",
+      "unit": "10",
+      "color": "green",
+      "price": "150",
+      "prodimg": "/uploads/1729674969080_istockphoto-495477978-612x612.jpg",
+      "userId": "72465ea3-185d-4e97-b422-f14324ad95f4",
+      "userName": "Rahul12"
+    },
+    {
+      "productid": "14d66751-77be-48ae-9f74-b4586c7e3ad1",
+      "title": "Test Product 4",
+      "unit": "2",
+      "color": "red",
+      "price": "423",
+      "prodimg": "/uploads/1729674993157_images (2).jpeg",
+      "userId": "72465ea3-185d-4e97-b422-f14324ad95f4",
+      "userName": "Rahul12"
+    },
+    {
+      "productid": "2f830c1c-a3ea-4799-b0bd-ce97636a1e3d",
+      "title": "Test Product 5",
+      "unit": "4",
+      "color": "red",
+      "price": "542",
+      "prodimg": "/uploads/1729675016331_images (1).jpeg",
+      "userId": "72465ea3-185d-4e97-b422-f14324ad95f4",
+      "userName": "Rahul12"
+    },
+    {
+      "productid": "97e4c8d1-6dd6-4958-9a6f-ff6f5a2e635f",
+      "title": "Test Product 6",
+      "unit": "10",
+      "color": "green",
+      "price": "109",
+      "prodimg": "/uploads/1729675049469_images.jpeg",
+      "userId": "f942fa65-d2cc-48d6-baf4-10d84a1c80dd",
+      "userName": "Demo12"
+    },
+    {
+      "productid": "1c6ece89-f20f-4ebd-a19c-f6da6d52240f",
+      "title": "Test Product 8",
+      "unit": "1",
+      "color": "green",
+      "price": "300",
+      "prodimg": "/uploads/1729675083228_download.jpeg",
+      "userId": "f942fa65-d2cc-48d6-baf4-10d84a1c80dd",
+      "userName": "Demo12"
+    },
+    {
+      "productid": "ac761d7b-7ef8-434f-8a66-4293200695a3",
+      "title": "Test Product 9",
+      "unit": "8",
+      "color": "green",
+      "price": "400",
+      "prodimg": "/uploads/1729675108080_stack-books-against-background-library-600nw-2459213053.webp",
+      "userId": "f942fa65-d2cc-48d6-baf4-10d84a1c80dd",
+      "userName": "Demo12"
+    },
+    {
+      "productid": "60af7aa1-b76b-4cce-a3d3-9800f5c53e12",
+      "title": "Test Product 10",
+      "unit": "10",
+      "color": "green",
+      "price": "901",
+      "prodimg": "/uploads/1729675128782_organic-cosmetic-product-with-dreamy-aesthetic-fresh-background_23-2151382816.avif",
+      "userId": "f942fa65-d2cc-48d6-baf4-10d84a1c80dd",
+      "userName": "Demo12"
+    },
+    {
+      "productid": "a1f11dcc-0ff4-42a6-a85f-818f29913bc1",
+      "title": "Test Product 11",
+      "unit": "10",
+      "color": "red",
+      "price": "120",
+      "prodimg": "/uploads/1729675167410_images (2).jpeg",
+      "userId": "f942fa65-d2cc-48d6-baf4-10d84a1c80dd",
+      "userName": "Demo12"
+    },
+    {
+      "productid": "38b642ba-cd57-4e6f-8de1-53cb15a08528",
+      "title": "Test Product 12",
+      "unit": "4",
+      "color": "blue",
+      "price": "123",
+      "prodimg": "/uploads/1729675216964_images (1).jpeg",
+      "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
+      "userName": "ankit32"
+    },
+    {
+      "productid": "ac625847-5e8b-444c-9aa3-364a9064e61d",
+      "title": "Test Product 12",
+      "unit": "5",
+      "color": "green",
+      "price": "123",
+      "prodimg": "/uploads/1729675250802_organic-cosmetic-product-with-dreamy-aesthetic-fresh-background_23-2151382816.avif",
+      "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
+      "userName": "ankit32"
+    },
+    {
+      "productid": "48659080-6ed0-402e-9434-23ae40e3f9e9",
+      "title": "Test Product 13",
+      "unit": "3",
+      "color": "green",
+      "price": "120",
+      "prodimg": "/uploads/1729675276812_images (2).jpeg",
+      "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
+      "userName": "ankit32"
+    },
+    {
+      "productid": "ea80cdb1-b3dd-4bd9-b598-f0a909d41515",
+      "title": "Test Product 14",
+      "unit": "10",
+      "color": "green",
+      "price": "500",
+      "prodimg": "/uploads/1729675361198_istockphoto-495477978-612x612.jpg",
+      "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
+      "userName": "ankit32"
+    },
+    {
+      "productid": "7d3f1e4a-24ce-4509-82f9-f63660695e99",
+      "title": "Test Product 14",
+      "unit": "5",
+      "color": "green",
+      "price": "120",
+      "prodimg": "/uploads/1729675393290_images (1).jpeg",
+      "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
+      "userName": "ankit32"
+    },
+    {
+      "productid": "263c4a11-c858-4ea7-93fa-fb337c4cf704",
+      "title": "Test Product 15",
+      "unit": "9",
+      "color": "red",
+      "price": "500",
+      "prodimg": "/uploads/1729675410370_images (2).jpeg",
+      "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
+      "userName": "ankit32"
+    },
+    {
+      "productid": "9d98cdf1-4a4c-4990-8890-b92a9add5331",
+      "title": "Test Product 16",
+      "unit": "2",
+      "color": "red",
+      "price": "500",
+      "prodimg": "/uploads/1729675481171_organic-cosmetic-product-with-dreamy-aesthetic-fresh-background_23-2151382816.avif",
+      "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
+      "userName": "ankit32"
+    },
+    {
+      "productid": "497140ab-4eb6-4fc7-8b0e-ed2f2c0fc51e",
+      "title": "Test Product 17",
+      "unit": "5",
+      "color": "green",
+      "price": "120",
+      "prodimg": "/uploads/1729675516088_istockphoto-495477978-612x612.jpg",
+      "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
+      "userName": "ankit32"
+    },
+    {
+      "productid": "d4169c80-7c2a-402b-9819-cfe9a6370d3d",
+      "title": "Test Product 20",
+      "unit": "9",
+      "color": "red",
+      "price": "230",
+      "prodimg": "/uploads/1729760273016_download.jpeg",
+      "userId": "f942fa65-d2cc-48d6-baf4-10d84a1c80dd",
+      "userName": "Demo12"
     }
   ]
 }
