@@ -10,6 +10,7 @@ import Data from '../Components/Data'
 import ListProd from '../Pages/ListProd';
 import Product from '../Pages/Product';
 import Home from '../Pages/Home';
+import Cart from '../Pages/Cart';
 
 function MyRoutes() {
   return (
@@ -24,6 +25,8 @@ function MyRoutes() {
           <Route path='/product' element={<ListProd/>}/>
           <Route path='/product/add' element={<Product/>}/>
           <Route path='/home' element={<Home/>}/> 
+          <Route path='/cart' element={<Cart/>}/> 
+          
 
         </Route>
         <Route path="*" element={<NotFound/>} />

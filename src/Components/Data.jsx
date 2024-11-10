@@ -130,7 +130,7 @@ const Data = () => {
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>
       <ToastContainer />
       <div className="relative overflow-x-auto">
-        <h1 className='text-center font-extrabold px-5 py-5 text-4xl'>User Data</h1>
+        <h1 className='text-center font-extrabold px-5 py-5 text-4xl'>Users Information</h1>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>

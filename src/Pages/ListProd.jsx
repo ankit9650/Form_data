@@ -3,13 +3,14 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
-
 const ListProd = () => {
     const [prodData, setProdData] = useState([]);
     const [editingProd, setEditingProd] = useState(null);
+    const [editFormData, setEditFormData] = useState({ title: '', color: '', unit: '', prodimg: null,price: '' });
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(6);
     const navigate = useNavigate();
+
     const fetchProducts = async () => {
         try {
             const token = localStorage.getItem("jwtToken");
@@ -26,8 +27,6 @@ const ListProd = () => {
 
             console.log("Fetched Products:", response.data);
             setProdData(Array.isArray(response.data) ? response.data : []);
-
-            setProdData(Array.isArray(response.data) ? response.data : []);
         } catch (err) {
             if (err.response && err.response.status === 401) {
                 localStorage.removeItem("jwtToken");
@@ -38,8 +37,6 @@ const ListProd = () => {
             console.error(err);
         }
     };
-
-
 
     useEffect(() => {
         fetchProducts();
@@ -57,7 +54,7 @@ const ListProd = () => {
             fetchProducts();
         } catch (error) {
             if (error.response) {
-                toast.error(error.response.data || 'An error occurred while deleting the product');
+                toast.error(error.response.data || 'error deleting product');
             } else {
                 toast.error('Network error');
             }
@@ -66,51 +63,53 @@ const ListProd = () => {
 
     const handleEdit = (product) => {
         setEditingProd(product);
-        setProdData(prevState => ({
-            ...prevState,
+        setEditFormData({
             title: product.title,
             color: product.color,
             unit: product.unit,
-            prodimg: null
-        }));
+            prodimg: null,
+            price:product.price,
+            productId: productid
+        });
     };
-
-
+    
     const handleUpdate = async () => {
         try {
             const token = localStorage.getItem("jwtToken");
             const updatedProd = new FormData();
-            updatedProd.append('title', prodData.title);
-            updatedProd.append('color', prodData.color);
-            updatedProd.append('unit', prodData.unit);
-
-            if (prodData.prodimg) {
-                updatedProd.append('prodimg', prodData.prodimg);
-            }
+            updatedProd.append('title', editFormData.title);
+            updatedProd.append('color', editFormData.color);
+            updatedProd.append('unit', editFormData.unit);
+            updatedProd.append('price', editFormData.price);
             
+            if (editFormData.prodimg) {
+                updatedProd.append('prodimg', editFormData.prodimg);
+            }
+    
             await axios.put(`http://localhost:5000/product/${editingProd.productid}`, updatedProd, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
                 }
             });
-
+            
             fetchProducts();
             setEditingProd(null);
+            setEditFormData({ title: '', color: '', unit: '', prodimg: null, price:'' });
             toast.success("Product updated!");
         } catch (error) {
             console.error('Error updating product:', error);
             toast.error('Error updating product');
         }
     };
-
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setProdData(prevState => ({ ...prevState, [name]: value }));
+        setEditFormData(prevState => ({ ...prevState, [name]: value }));
     };
 
     const handleFileChange = (e) => {
-        setProdData(prevState => ({ ...prevState, prodimg: e.target.files[0] }));
+        setEditFormData(prevState => ({ ...prevState, prodimg: e.target.files[0] }));
     };
 
     const handleAddProduct = () => {
@@ -134,29 +133,32 @@ const ListProd = () => {
                 <h1 className='text-center font-extrabold px-5 py-5 text-4xl'>Products List</h1>
                 <button className='p-1 bg-gray-700 font-semibold rounded text-white mb-1' onClick={handleAddProduct}>Add Product</button>
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead className="text-xs text-gray-700 uppercase text-center bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" className="px-6 py-3">Product Image</th>
-                            <th scope="col" className="px-6 py-3">Title</th>
+                            <th scope="col" className="px-6 py-3 text-left">Product Image</th>
+                            <th scope="col" className="px-6 py-3 ">Title</th>
                             <th scope="col" className="px-6 py-3">Unit</th>
                             <th scope="col" className="px-6 py-3">Color</th>
+                            <th scope="col" className="px-6 py-3">Price</th>                            
                             <th scope="col" className="px-6 py-3 text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {currentItems.length > 0 ? (
                             currentItems.map((item) => (
-                                <tr key={item.productid} className='bg-white border-b w-full dark:bg-gray-800 dark:border-gray-700'>
+                                <tr key={item.productid} className='bg-white text-center border-b w-full dark:bg-gray-800 dark:border-gray-700'>
                                     <td className='px-6 py-4'>
                                         <img
                                             src={`http://localhost:5000${item.prodimg}`}
                                             alt="Product"
-                                            className="w-12 h-12 rounded-full"
+                                            className="w-12 h-12 ml-5 rounded-full"
                                         />
                                     </td>
                                     <td className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'>{item.title}</td>
                                     <td className='px-6 py-4'>{item.unit}</td>
                                     <td className='px-8 py-4'>{item.color}</td>
+                                    <td className='px-8 py-4'>₹{item.price}</td>
+
                                     <td className="flex items-center justify-center space-x-8 border px-6 py-4">
                                         <button onClick={() => handleDelete(item.productid)} className='flex items-center bg-transparent hover:bg-red-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-xl'>Delete</button>
                                         <button onClick={() => handleEdit(item)} className='flex items-center bg-transparent hover:bg-green-700 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-xl'>Edit</button>
@@ -174,9 +176,11 @@ const ListProd = () => {
                 {editingProd && (
                     <div className="mt-4">
                         <h2 className="text-lg font-semibold">Edit Product</h2>
-                        <input type="text" name="title" value={prodData.title} onChange={handleChange} placeholder="Title" className="border p-2 m-2" />
-                        <input type="text" name="color" value={prodData.color} onChange={handleChange} placeholder="Color" className="border p-2 m-2" />
-                        <input type="text" name="unit" value={prodData.unit} onChange={handleChange} placeholder="Unit" className="border p-2 m-2" />
+                        <input type="text" name="title" value={editFormData.title} onChange={handleChange} placeholder="Title" className="border p-2 m-2" />
+                        <input type="text" name="color" value={editFormData.color} onChange={handleChange} placeholder="Color" className="border p-2 m-2" />
+                        <input type="text" name="unit" value={editFormData.unit} onChange={handleChange} placeholder="Unit" className="border p-2 m-2" />
+                        <input type="text" name="price" value={editFormData.price} onChange={handleChange} placeholder="Unit" className="border p-2 m-2" />
+                        
                         <input type="file" name="prodImg" onChange={handleFileChange} className="border p-2 m-2" />
                         <button onClick={handleUpdate} className="bg-blue-500 text-white py-2 px-4 rounded">Update</button>
                     </div>
@@ -184,9 +188,8 @@ const ListProd = () => {
 
                 {/* Pagination Controls */}
                 <div className="flex justify-center mt-4">
-                    <div className='border p-1 border-gray-700 bg-gray-200 rounded-lg mb-1  '>
+                    <div className='border p-1 border-gray-700 bg-gray-200 rounded-lg mb-1'>
                         {Array.from({ length: totalPages }, (_, index) => (
-
                             <button
                                 key={index + 1}
                                 onClick={() => handlePageChange(index + 1)}
@@ -194,10 +197,8 @@ const ListProd = () => {
                             >
                                 {index + 1}
                             </button>
-
                         ))}
                     </div>
-
                 </div>
             </div>
         </div>
