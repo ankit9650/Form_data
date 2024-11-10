@@ -44,7 +44,8 @@ const readFile = (callback) => {
             return callback(err);
         }
         try {
-            const jsonData = JSON.parse(data || '{"users": [], "products": []}');
+            const jsonData = JSON.parse(data || '{"users": [], "products": [],"cart":[]');
+            console.log('File read successfully:', jsonData);
             callback(null, jsonData);
         } catch (parseError) {
             console.error('Error parsing data:', parseError);
@@ -52,6 +53,8 @@ const readFile = (callback) => {
         }
     });
 };
+
+
 
 // Write data to file
 const writeFile = (data, res) => {
@@ -64,6 +67,7 @@ const writeFile = (data, res) => {
         res.status(200).send('Operation successful');
     });
 };
+
 
 // Register endpoint
 app.post("/register", upload.single('Avatar'), async (req, res) => {
@@ -246,7 +250,7 @@ app.get('/product', authMiddleware, (req, res) => {
     });
 });
 
-// Delete Product endpoint
+
 // Delete Product endpoint
 app.delete('/product/:id', authMiddleware, (req, res) => {
     const productId = req.params.id;
@@ -305,6 +309,86 @@ app.put("/product/:id", authMiddleware, upload.single('prodimg'), (req, res) => 
         writeFile(data, res);
     });
 });
+
+// Add Product to Cart
+app.post("/cart", authMiddleware, (req, res) => {
+    const { productid, quantity } = req.body;
+    const currentUser = req.user;
+  
+    if (!productid || !quantity) {
+      return res.status(400).send('Product ID and quantity are required');
+    }
+  
+    readFile((err, data) => {
+      if (err) {
+        console.error("Error reading cart data:", err);
+        return res.status(500).send('Error reading cart data');
+      }
+  
+      const products = data.products;
+      const cart = data.cart || [];
+  
+      const product = products.find(p => p.productid === productid);
+      if (!product) {
+        return res.status(404).send('Product not found');
+      }
+  
+      
+      const cartItemIndex = cart.findIndex(item => item.productid === productid && item.userId === currentUser.id);
+      if (cartItemIndex >= 0) {
+        cart[cartItemIndex].quantity += quantity;
+      } else {
+        const newCartItem = {
+          productid: product.productid,
+          title: product.title,
+          price: product.price,
+          quantity,
+          userId: currentUser.id,
+          userName: currentUser.username,
+          imgSrc: product.prodimg
+        };
+        cart.push(newCartItem);
+      }
+  
+      writeFile(data, res);
+    });
+  });
+  
+// // Get Cart Items
+app.get("/cart", authMiddleware, (req, res) => {
+    const currentUser = req.user;
+
+    readFile((err, data) => {
+        if (err) return res.status(500).send('Error reading cart data');
+
+        const cart = data.Cart;
+        const userCart = cart.filter(item => item.userId === currentUser.id);
+
+        res.status(200).json(userCart);
+    });
+});
+
+// Remove Item from Cart
+app.delete("/cart/:productid", authMiddleware, (req, res) => {
+    const productid = req.params.productid;
+    const currentUser = req.user;
+
+    readFile((err, data) => {
+        if (err) return res.status(500).send('Error reading cart data');
+
+        const cart = data.Cart;
+        const cartItemIndex = cart.findIndex(item => item.productid === productid && item.userId === currentUser.id);
+
+        if (cartItemIndex === -1) {
+            return res.status(404).send('Product not found in cart');
+        }
+
+        cart.splice(cartItemIndex, 1);
+        writeFile(data, res);
+    });
+});
+
+
 
 // Protected route example
 app.get('/protected', authMiddleware, (req, res) => {

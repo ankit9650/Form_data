@@ -39,13 +39,25 @@
       "accountType": "User",
       "id": "f942fa65-d2cc-48d6-baf4-10d84a1c80dd",
       "Avatar": "/uploads/1729659257130_images (2).jpeg"
+    },
+    {
+      "email": "testing@123.com",
+      "password": "$2b$10$Df5eYox4lhMkqV8LOXOrTeCMMuoI.03R/CQ0J3PELIG762uayjR22",
+      "phone": "2131323132",
+      "username": "test90",
+      "hobbies": "Cricket",
+      "gender": "Male",
+      "dob": "2024-10-09",
+      "accountType": "User",
+      "id": "9bbf61d6-05c3-4984-8477-de841ba0aff3",
+      "Avatar": "/uploads/1730094523085_istockphoto-495477978-612x612.jpg"
     }
   ],
   "products": [
     {
       "productid": "9d23e842-bf67-46f5-9c87-22efc073d822",
       "title": "Books ",
-      "unit": "25",
+      "unit": "20",
       "color": "red",
       "price": "120",
       "prodimg": "/uploads/stack-books-against-background-library-600nw-2459213053.webp",
@@ -155,10 +167,10 @@
     {
       "productid": "a1f11dcc-0ff4-42a6-a85f-818f29913bc1",
       "title": "Test Product 11",
-      "unit": "10",
+      "unit": "15",
       "color": "red",
       "price": "120",
-      "prodimg": "/uploads/1729675167410_images (2).jpeg",
+      "prodimg": "/uploads/1730180928861_stack-books-against-background-library-600nw-2459213053.webp",
       "userId": "f942fa65-d2cc-48d6-baf4-10d84a1c80dd",
       "userName": "Demo12"
     },
@@ -243,14 +255,43 @@
       "userName": "ankit32"
     },
     {
-      "productid": "d4169c80-7c2a-402b-9819-cfe9a6370d3d",
-      "title": "Test Product 20",
-      "unit": "9",
+      "productid": "d3adc09f-c73e-4776-ac7c-84853b513403",
+      "title": "Test Product 18",
+      "unit": "3",
       "color": "red",
-      "price": "230",
-      "prodimg": "/uploads/1729760273016_download.jpeg",
-      "userId": "f942fa65-d2cc-48d6-baf4-10d84a1c80dd",
-      "userName": "Demo12"
+      "price": "120",
+      "prodimg": "/uploads/1730114909410_images (2).jpeg",
+      "userId": "9bbf61d6-05c3-4984-8477-de841ba0aff3",
+      "userName": "test90"
+    }
+  ],
+  "cart": [
+    {
+      "productid": "9d23e842-bf67-46f5-9c87-22efc073d822",
+      "title": "Books ",
+      "price": "120",
+      "quantity": 6,
+      "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
+      "userName": "ankit32",
+      "imgSrc": "/uploads/stack-books-against-background-library-600nw-2459213053.webp"
+    },
+    {
+      "productid": "586b477c-7997-43ff-a18d-0eb21631efa7",
+      "title": "Bottle",
+      "price": "150",
+      "quantity": 7,
+      "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
+      "userName": "ankit32",
+      "imgSrc": "/uploads/1729510084779_organic-cosmetic-product-with-dreamy-aesthetic-fresh-background_23-2151382816.avif"
+    },
+    {
+      "productid": "97e4c8d1-6dd6-4958-9a6f-ff6f5a2e635f",
+      "title": "Test Product 6",
+      "price": "109",
+      "quantity": 1,
+      "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
+      "userName": "ankit32",
+      "imgSrc": "/uploads/1729675049469_images.jpeg"
     }
   ]
 }
