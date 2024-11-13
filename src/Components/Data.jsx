@@ -25,8 +25,7 @@ const Data = () => {
         }
       });
 
-      console.log('Response data:', response.data);
-
+    
       if (Array.isArray(response.data) && response.data.length > 0) {
         setLoginData(response.data);
         setUserAccountType(response.data[0].accountType);
@@ -100,10 +99,6 @@ const Data = () => {
         }
       });
 
-
-      console.log('Updated user response:', response.data);
-
-
       setLoginData(prevData =>
         prevData.map(user => (user.id === editingUser.id ? response.data : user))
       );
@@ -115,7 +110,6 @@ const Data = () => {
       toast.error('Error updating user');
     }
   };
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -129,54 +123,35 @@ const Data = () => {
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>
       <ToastContainer />
-      <div className="relative overflow-x-auto">
-        <h1 className='text-center font-extrabold px-5 py-5 text-4xl'>Users Information</h1>
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">Avatar</th>
-              <th scope="col" className="px-6 py-3">Username</th>
-              <th scope="col" className="px-6 py-3">Email</th>
-              <th scope="col" className="px-6 py-3">Phone</th>
-              <th scope="col" className="px-6 py-3">Hobbies</th>
-              <th scope="col" className="px-6 py-3">Account Type</th>
-              <th scope="col" className="px-6 py-3 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Array.isArray(loginData) && loginData.length > 0 ? (
-              loginData.map((item) => (
-                <tr key={item.id} className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>
+      <div className="max-w-7xl mx-auto p-6 mt-32 bg-white rounded-xl shadow-md my-5">
+        <h1 className="text-center font-extrabold px-5 py-5 text-4xl mb-6">Users Information</h1>
 
-                  <td className='px-6 py-4'>
-                    <img
-                      src={`http://localhost:5000${item.Avatar}`}
-                      alt="Avatar"
-                      className="w-12 h-12 rounded-full"
-                    />
-                  </td>
-
-                  <td className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'>{item.username}</td>
-                  <td className='px-6 py-4'>{item.email}</td>
-                  <td className='px-8 py-4'>{item.phone}</td>
-                  <td className='px-8 py-4'>{Array.isArray(item.hobbies) ? item.hobbies.join(', ') : item.hobbies}</td>
-                  <td className='px-6 py-4'>{item.accountType}</td>
-                  <td className="flex space-x-8 border px-6 py-4">
-                    {userAccountType === "Admin" && (
-                      <button onClick={() => handleDelete(item.id)} className='flex items-center bg-transparent hover:bg-red-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-xl'>Delete</button>
-                    )}
-                    <button onClick={() => handleEdit(item)} className='flex items-center bg-transparent hover:bg-green-700 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-xl'>Edit</button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7">No users found.</td>
-              </tr>
-            )}
-          </tbody>
-
-        </table>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {loginData && loginData.length > 0 ? (
+            loginData.map((user) => (
+              <div key={user.id} className="bg-white p-6 rounded-lg shadow-lg border hover:shadow-lg transition-all">
+                <img
+                  src={`http://localhost:5000${user.Avatar}`}
+                  alt="Avatar"
+                  className="w-24 h-24 rounded-full mx-auto mb-4"
+                />
+                <h3 className="text-center text-xl font-semibold text-gray-800">{user.username}</h3>
+                <p className="text-center text-gray-600"><strong>Email:</strong> {user.email}</p>
+                <p className="text-center text-gray-600"><strong>Phone:</strong> {user.phone}</p>
+                <p className="text-center text-gray-600"><strong>Hobbies:</strong> {Array.isArray(user.hobbies) ? user.hobbies.join(', ') : user.hobbies}</p>
+                <p className="text-center text-gray-600"><strong>Account Type:</strong> {user.accountType}</p>
+                <div className="mt-4 flex justify-center gap-4">
+                  {userAccountType === "Admin" && (
+                    <button onClick={() => handleDelete(user.id)} className="bg-red-500 text-white py-2 px-4 rounded-lg">Delete</button>
+                  )}
+                  <button onClick={() => handleEdit(user)} className="bg-green-500 text-white py-2 px-4 rounded-lg">Edit</button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-500 col-span-full">No users found.</p>
+          )}
+        </div>
 
         {editingUser && (
           <div className="mt-4">

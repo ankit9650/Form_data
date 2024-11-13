@@ -60,30 +60,31 @@ function Card({ imgSrc, title, color, userName, unit, productid, price }) {
   };
 
   return (
-    <div className="max-w-sm bg-white rounded-lg overflow-hidden font-Poppins shadow-md shadow-black p-1">
-      <img className="w-full h-72 rounded shadow" src={`http://localhost:5000${imgSrc}`} alt={title} />
-      <div className="px-6 py-4">
-        <div className="font-bold text-xl mb-1">{title}</div>
-        <div className="font-semibold text-md mb-2">Added By: {userName}</div>
-        <div className="flex flex-row space-x-5">
-          <p className="text-gray-700 text-base">{color}</p>
-          <p className="text-gray-700 text-base">Unit: {unit}</p>      
-          <p className="text-gray-700 text-base">₹ {price}</p>        
+    <div className="max-w-xs border rounded-xl bg-white shadow-md hover:shadow-2xl transition duration-300 ease-in-out transform hover:scale-105 font-Poppins">
+      <img className="w-full h-72 p-1 object-cover rounded-t-xl" src={`http://localhost:5000${imgSrc}`} alt={title} />
+      <div className="p-6">
+        <div className="font-semibold text-xl text-gray-900 capitalize mb-2">{title}</div>
+        <div className="text-sm text-gray-500">Added By: {userName}</div>
+        <div className="flex flex-wrap gap-4 mt-2 text-gray-600">
+          <p className="text-sm">{color}</p>
+          <p className="text-sm">Unit: {unit}</p>
+          <p className="text-sm font-semibold">₹ {price}</p>
         </div>
         
-        <div className="flex items-center mt-2">
-          <label htmlFor="" className="text-gray-700 text-base text-md mr-2"> Quantity:</label>
-          <div className="border space-x-3 rounded-lg bg-gray-100">
+        {/* Quantity Control */}
+        <div className="flex items-center mt-4">
+          <label className="text-gray-700 text-sm mr-2">Quantity:</label>
+          <div className="flex items-center border rounded-xl bg-gray-100 px-4 py-1">
             <button
               onClick={handleDecrement}
-              className="bg-gray-400 text-gray-800 px-1 font-bold rounded hover:bg-gray-500 transition"
+              className="bg-gray-300 text-gray-800 rounded-full w-8 h-8 flex items-center justify-center transition hover:bg-gray-400"
             >
               -
             </button>
-            <span className="mx-2">{quantity}</span>
+            <span className="mx-4 text-lg font-semibold">{quantity}</span>
             <button
               onClick={handleIncrement}
-              className="bg-gray-400 text-gray-800 font-bold px-1 rounded hover:bg-gray-500 transition"
+              className="bg-gray-300 text-gray-800 rounded-full w-8 h-8 flex items-center justify-center transition hover:bg-gray-400"
             >
               +
             </button>
@@ -91,9 +92,10 @@ function Card({ imgSrc, title, color, userName, unit, productid, price }) {
         </div>
       </div>
 
+      {/* Add to Cart Button */}
       <button
         onClick={handleCart}
-        className="py-2.5 px-5 ml-4 mb-2 text-sm font-medium text-white focus:outline-none bg-black rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+        className="w-full py-3 px-6 text-sm font-semibold text-white bg-black rounded-xl mt-4 transition hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 block"
       >
         Add to Cart
       </button>

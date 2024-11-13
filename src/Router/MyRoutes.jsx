@@ -11,6 +11,8 @@ import ListProd from '../Pages/ListProd';
 import Product from '../Pages/Product';
 import Home from '../Pages/Home';
 import Cart from '../Pages/Cart';
+import Userlist from '../Components/Userlist';
+import Checkout from '../Pages/Checkout';
 
 function MyRoutes() {
   return (
@@ -26,7 +28,9 @@ function MyRoutes() {
           <Route path='/product/add' element={<Product/>}/>
           <Route path='/home' element={<Home/>}/> 
           <Route path='/cart' element={<Cart/>}/> 
-          
+          <Route path='/list' element={<Userlist/>}/> 
+          <Route path='/payment' element={<Checkout/>}/>       
+       
 
         </Route>
         <Route path="*" element={<NotFound/>} />

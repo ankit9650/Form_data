@@ -272,20 +272,6 @@ const FormComponent = () => {
                         </div>
                     </div>
 
-
-                    {/* Gender Radio */}
-                    {/* <div className='flex flex-col items-center mb-4'>
-                        <label className='block text-xs font-medium text-gray-700'>GENDER:</label>
-                        <div className='flex gap-4 items-center justify-center'>
-                            <label htmlFor="">Male</label>
-                            <input type="radio" name="gender" value="Male" onChange={formik.handleChange} />
-                            <label htmlFor="">Female</label>
-                            <input type="radio" name="gender" value="Female" onChange={formik.handleChange} />
-                        </div>
-                        <div className='text-red-600'>
-                            {formik.touched.gender && formik.errors.gender ? formik.errors.gender : null}
-                        </div>
-                    </div> */}
                     
                     {/* DOB */}
                     <div className='mb-4'>

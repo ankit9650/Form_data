@@ -8,10 +8,10 @@ import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
     const navigate = useNavigate();
-    
+
     const validationSchema = Yup.object().shape({
         username: Yup.string().required('Username is required'),
-        password: Yup.string().required("Cannot be empty!"),
+        password: Yup.string().required("Password is required"),
     });
 
     const initialValues = {
@@ -25,12 +25,12 @@ function Login() {
 
         try {
             const logResponse = await axios.post('http://localhost:5000/login', values);
-            
+
             if (logResponse.status === 200) {
                 const { token } = logResponse.data;
                 localStorage.setItem('jwtToken', token);               
                 notifySuccess();
-                navigate("/home");           
+                navigate("/home");
             }
 
         } catch (error) {
@@ -43,67 +43,68 @@ function Login() {
         }
     };
 
-    
     useEffect(() => {
         const checkLoggedIn = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/register', {
                     headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` }
-                });                
+                });
                 const token = localStorage.getItem('jwtToken');
                 if (token) {
-                    
-                    navigate("/data", { replace: true }); 
+                    navigate("/data", { replace: true });
                 }
             } catch (error) {
                 console.error("Protected route", error);
-               
             }
         };
         checkLoggedIn();
     }, [navigate]);
-  
+
     return (
         <>
             <ToastContainer />
-            <div className='flex items-center justify-center min-h-screen bg-gray-100'>
+            <div className='flex items-center justify-center min-h-screen '>
                 <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
                     onSubmit={onSubmit}
                 >
                     {() => (
-                        <div className="text-center bg-white w-96 h-full shadow-md shadow-gray-500 rounded-3xl p-6">
-                            <h1 className='text-2xl font-extrabold mb-8'>Login</h1>
+                        <div className="bg-white p-8 rounded-xl shadow-lg w-96">
+                            <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Login</h1>
                             <Form>
-                                <div>
-                                    <label htmlFor="username" className='block text-sm font-medium text-gray-700'>Username:</label>
+                                <div className="mb-5">
+                                    <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
                                     <Field
                                         name="username"
                                         type="text"
                                         placeholder="Enter your username"
-                                        className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
+                                        className="w-full px-4 py-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                     />
-                                    <ErrorMessage name='username' component="div" className='text-red-600' />
+                                    <ErrorMessage name='username' component="div" className="text-red-500 text-sm mt-1" />
                                 </div>
-                                <div>
-                                    <label htmlFor="password" className='block text-sm font-medium text-gray-700'>Password:</label>
+
+                                <div className="mb-5">
+                                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
                                     <Field
                                         name="password"
                                         type="password"
                                         placeholder="Enter your password"
-                                        className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
+                                        className="w-full px-4 py-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                     />
-                                    <ErrorMessage name='password' component="div" className='text-red-600' />
+                                    <ErrorMessage name='password' component="div" className="text-red-500 text-sm mt-1" />
                                 </div>
 
-                                <div className='text-right mt-2'>
-                                    <Link to="/register" className='hover:text-blue-700 hover:underline'>
-                                        Register?
+                                <div className="text-right mb-6">
+                                    <Link to="/register" className="text-sm text-indigo-600 hover:text-indigo-800">
+                                        Don't have an account? Register
                                     </Link>
                                 </div>
-                                
-                                <button type='submit' className='mt-4 bg-blue-500 text-white rounded-lg p-2'>
+
+                                <button
+                                    type="submit"
+                                    className="w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
+                                >
                                     Login
                                 </button>
                             </Form>

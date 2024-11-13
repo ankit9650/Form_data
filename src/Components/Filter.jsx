@@ -75,54 +75,82 @@ function Filter({ onFilterChange, isOpen, onClose }) {
   };
 
   return (
-    <aside className={`fixed top-0 left-0 w-72 min-h-screen bg-white shadow-lg transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-      <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-        &times;
-      </button>
-      <h2 className='text-center text-2xl font-bold mb-4 mt-4'>Filter</h2>
-      <ul className='space-y-4 p-4'>
-        <li>
-          <label htmlFor="price" className='block mb-1'>Price Range:</label>
-          <input 
-            type="range" 
-            min="0" 
-            max="1000" 
-            value={priceRange[1]} 
-            onChange={handlePriceChange}
-            className='w-full'
-            step="10" 
-          />
-          <p>Price Range up to {priceRange[1]}</p>
-        </li>
+    <>
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-20"
+          onClick={onClose}
+        />
+      )}
 
-        <li>
-          <label htmlFor="addedby" className='block mb-1'>Added By:</label>
-          <select id="addedby" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" onChange={handleUserNameChange}>
-            <option value="">Select Added By:</option>
-            {userNames.map((name, index) => (
-              <option key={index} value={name}>{name}</option>
-            ))}
-          </select>
-        </li>
+      <aside 
+        className={`fixed top-0 left-0 w-72 min-h-screen bg-white shadow-lg z-30 transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{ top: '80px', height: 'calc(100vh - 80px)' }}
+      >
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+          &times;
+        </button>
+        <h2 className='text-center text-2xl font-bold mb-4 mt-4'>Filter</h2>
+        <ul className='space-y-4 p-4'>
+          {/* Price Range */}
+          <li>
+            <label htmlFor="price" className='block mb-1'>Price Range:</label>
+            <input 
+              type="range" 
+              min="0" 
+              max="1000" 
+              value={priceRange[1]} 
+              onChange={handlePriceChange}
+              className='w-full'
+              step="10" 
+            />
+            <p>Price Range up to {priceRange[1]}</p>
+          </li>
 
-        <li>
-          <label className='block mb-1'>Color:</label>
-          <div className="flex flex-col space-y-2">
-            {['red', 'green', 'blue'].map(color => (
-              <div className="flex items-center" key={color}>
-                <input id={`color-${color.toLowerCase()}`} type="checkbox" value={color} onChange={handleColorChange} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" />
-                <label htmlFor={`color-${color.toLowerCase()}`} className="ml-2 text-sm font-medium text-gray-900">{color}</label>
-              </div>  
-            ))}
+          {/* Added By */}
+          <li>
+            <label htmlFor="addedby" className='block mb-1'>Added By:</label>
+            <select 
+              id="addedby" 
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+              onChange={handleUserNameChange}
+              value={selectedUserName}
+            >
+              <option value="">Select Added By:</option>
+              {userNames.map((name, index) => (
+                <option key={index} value={name}>{name}</option>
+              ))}
+            </select>
+          </li>
+
+          {/* Color */}
+          <li>
+            <label className='block mb-1'>Color:</label>
+            <div className="flex flex-col space-y-2">
+              {['red', 'green', 'blue'].map(color => (
+                <div className="flex items-center" key={color}>
+                  <input 
+                    id={`color-${color.toLowerCase()}`} 
+                    type="checkbox" 
+                    value={color} 
+                    onChange={handleColorChange} 
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" 
+                    checked={selectedColor.includes(color)}
+                  />
+                  <label htmlFor={`color-${color.toLowerCase()}`} className="ml-2 text-sm font-medium text-gray-900">{color}</label>
+                </div>  
+              ))}
+            </div>
+          </li>
+
+          {/* Filter Actions */}
+          <div className='mt-3 flex flex-row space-x-2'>
+            <button className='border bg-blue-500 p-1 text-white rounded' onClick={handleClearFilter}>Clear Filters</button>
+            <button className='border bg-green-500 p-1 text-white rounded' onClick={handleApplyFilter}>Apply Filters</button>
           </div>
-        </li>
-
-        <div className='mt-3 flex flex-row space-x-2'>
-          <button className='border bg-blue-500 p-1 text-white rounded' onClick={handleClearFilter}>Clear Filters</button>
-          <button className='border bg-green-500 p-1 text-white rounded' onClick={handleApplyFilter}>Apply Filters</button>
-        </div>
-      </ul>
-    </aside>
+        </ul>
+      </aside>
+    </>
   );
 }
 
