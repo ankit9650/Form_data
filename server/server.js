@@ -45,7 +45,7 @@ const readFile = (callback) => {
         }
         try {
             const jsonData = JSON.parse(data || '{"users": [], "products": [],"cart":[]');
-            console.log('File read successfully:', jsonData);
+       
             callback(null, jsonData);
         } catch (parseError) {
             console.error('Error parsing data:', parseError);
@@ -63,7 +63,7 @@ const writeFile = (data, res) => {
             console.error('Error writing file:', err);
             return res.status(500).send('Error writing file');
         }
-        console.log('Data saved!');
+       
         res.status(200).send('Operation successful');
     });
 };
@@ -213,7 +213,7 @@ app.post("/login", async (req, res) => {
 // Add product endpoint
 app.post("/product", authMiddleware, upload.single('prodimg'), async (req, res) => {
     const formData = req.body;
-
+    
     const newProduct = {
         productid: uuidv4(),
         title: formData.title,
@@ -311,9 +311,10 @@ app.put("/product/:id", authMiddleware, upload.single('prodimg'), (req, res) => 
 });
 
 // Add Product to Cart
+
 app.post("/cart", authMiddleware, (req, res) => {
     const { productid, quantity } = req.body;
-    const currentUser = req.user;
+    const currentUser = req.user; 
   
     if (!productid || !quantity) {
       return res.status(400).send('Product ID and quantity are required');
@@ -332,8 +333,7 @@ app.post("/cart", authMiddleware, (req, res) => {
       if (!product) {
         return res.status(404).send('Product not found');
       }
-  
-      
+
       const cartItemIndex = cart.findIndex(item => item.productid === productid && item.userId === currentUser.id);
       if (cartItemIndex >= 0) {
         cart[cartItemIndex].quantity += quantity;
@@ -343,8 +343,8 @@ app.post("/cart", authMiddleware, (req, res) => {
           title: product.title,
           price: product.price,
           quantity,
-          userId: currentUser.id,
-          userName: currentUser.username,
+          userId: currentUser.id, 
+          userName: currentUser.username, 
           imgSrc: product.prodimg
         };
         cart.push(newCartItem);
@@ -352,16 +352,17 @@ app.post("/cart", authMiddleware, (req, res) => {
   
       writeFile(data, res);
     });
-  });
+});
+
   
-// // Get Cart Items
+
+// Get Cart Items
 app.get("/cart", authMiddleware, (req, res) => {
     const currentUser = req.user;
-
     readFile((err, data) => {
         if (err) return res.status(500).send('Error reading cart data');
 
-        const cart = data.Cart;
+        const cart = data.cart || [];
         const userCart = cart.filter(item => item.userId === currentUser.id);
 
         res.status(200).json(userCart);
@@ -369,21 +370,25 @@ app.get("/cart", authMiddleware, (req, res) => {
 });
 
 // Remove Item from Cart
-app.delete("/cart/:productid", authMiddleware, (req, res) => {
+app.delete('/cart/:productid', authMiddleware, (req, res) => {
     const productid = req.params.productid;
-    const currentUser = req.user;
+    const userId = req.user.id;  
 
     readFile((err, data) => {
-        if (err) return res.status(500).send('Error reading cart data');
-
-        const cart = data.Cart;
-        const cartItemIndex = cart.findIndex(item => item.productid === productid && item.userId === currentUser.id);
-
-        if (cartItemIndex === -1) {
-            return res.status(404).send('Product not found in cart');
+        if (err) {
+            console.error('Error reading cart data:', err);
+            return res.status(500).json({ message: 'Error reading cart data' });
         }
 
-        cart.splice(cartItemIndex, 1);
+        const cart = data.cart || [];
+        
+        const cartItemIndex = cart.findIndex(item => item.productid === productid && item.userId === userId);
+
+        if (cartItemIndex === -1) {
+            return res.status(404).json({ message: 'Item not found in cart' });
+        }
+
+        cart.splice(cartItemIndex, 1);  
         writeFile(data, res);
     });
 });

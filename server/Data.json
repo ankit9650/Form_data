@@ -16,7 +16,7 @@
       "email": "rahul123@gmail.com",
       "password": "$2b$10$/qrZg09On2rjlahrsRMbu.lnv1Ae4gEM1svUYZn.gl.mCNdFWHQt6",
       "phone": "1231231212",
-      "username": "rahul12",
+      "username": "Rahul12",
       "hobbies": [
         "Travelling",
         "Cricket",
@@ -270,7 +270,7 @@
       "productid": "9d23e842-bf67-46f5-9c87-22efc073d822",
       "title": "Books ",
       "price": "120",
-      "quantity": 6,
+      "quantity": 3,
       "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
       "userName": "ankit32",
       "imgSrc": "/uploads/stack-books-against-background-library-600nw-2459213053.webp"
@@ -279,19 +279,10 @@
       "productid": "586b477c-7997-43ff-a18d-0eb21631efa7",
       "title": "Bottle",
       "price": "150",
-      "quantity": 7,
+      "quantity": 3,
       "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
       "userName": "ankit32",
       "imgSrc": "/uploads/1729510084779_organic-cosmetic-product-with-dreamy-aesthetic-fresh-background_23-2151382816.avif"
-    },
-    {
-      "productid": "97e4c8d1-6dd6-4958-9a6f-ff6f5a2e635f",
-      "title": "Test Product 6",
-      "price": "109",
-      "quantity": 1,
-      "userId": "d2736b94-00c1-4521-9db9-52cdbe660b61",
-      "userName": "ankit32",
-      "imgSrc": "/uploads/1729675049469_images.jpeg"
     }
   ]
 }
